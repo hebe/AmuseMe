@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest /tmp/amuseme-scaffold --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm install)",
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(gh issue list --repo hebe/AmuseMe --limit 50 --json number,title,milestone,labels,state)"
+    ]
+  }
+}
