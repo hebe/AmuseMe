@@ -4,7 +4,7 @@ import type { MediaItem, TvSeries, ConsumptionGoal } from './types'
 
 export const tvSeries: TvSeries[] = [
   {
-    id: 'ts-porni',
+    id: 'series-porni',
     title: 'Pørni',
     seasonsAvailable: 5,
     createdAt: '2024-01-01T00:00:00Z',
@@ -28,7 +28,7 @@ export const mediaItems: MediaItem[] = [
     title: 'Pørni sesong 1',
     mediaType: 'tv_season',
     status: 'done',
-    seriesId: 'ts-porni',
+    seriesId: 'series-porni',
     seasonNumber: 1,
     dateAdded: '2024-01-10T00:00:00Z',
     dateConsumed: '2024-03-15T00:00:00Z',
@@ -43,21 +43,21 @@ export const mediaItems: MediaItem[] = [
     title: 'Pørni sesong 2',
     mediaType: 'tv_season',
     status: 'done',
-    seriesId: 'ts-porni',
+    seriesId: 'series-porni',
     seasonNumber: 2,
     dateAdded: '2024-03-16T00:00:00Z',
-    dateConsumed: '2024-09-20T00:00:00Z',
-    consumedYear: 2024,
+    dateConsumed: '2025-01-18T00:00:00Z',
+    consumedYear: 2025,
     rating: 4,
     createdAt: '2024-03-16T00:00:00Z',
-    updatedAt: '2024-09-20T00:00:00Z',
+    updatedAt: '2025-01-18T00:00:00Z',
   },
   {
     id: 'mi-porni-s3',
     title: 'Pørni sesong 3',
     mediaType: 'tv_season',
     status: 'done',
-    seriesId: 'ts-porni',
+    seriesId: 'series-porni',
     seasonNumber: 3,
     dateAdded: '2024-09-21T00:00:00Z',
     dateConsumed: '2025-02-28T00:00:00Z',
@@ -71,7 +71,7 @@ export const mediaItems: MediaItem[] = [
     title: 'Pørni sesong 4',
     mediaType: 'tv_season',
     status: 'done',
-    seriesId: 'ts-porni',
+    seriesId: 'series-porni',
     seasonNumber: 4,
     dateAdded: '2025-03-01T00:00:00Z',
     dateConsumed: '2026-01-10T00:00:00Z',
@@ -85,7 +85,7 @@ export const mediaItems: MediaItem[] = [
     title: 'Pørni sesong 5',
     mediaType: 'tv_season',
     status: 'want',
-    seriesId: 'ts-porni',
+    seriesId: 'series-porni',
     seasonNumber: 5,
     dateAdded: '2026-02-01T00:00:00Z',
     createdAt: '2026-02-01T00:00:00Z',
@@ -179,6 +179,39 @@ export const mediaItems: MediaItem[] = [
     releaseYear: 2024,
     createdAt: '2026-02-20T00:00:00Z',
     updatedAt: '2026-02-20T00:00:00Z',
+  },
+
+  // Books — duplicate detection test pair
+  // "The Midnight Library" (done) vs "Midnight Library" (want, missing "The")
+  // → fuzzy title match (low confidence) + same author (high confidence)
+  {
+    id: 'mi-book-midnight-done',
+    title: 'The Midnight Library',
+    mediaType: 'book',
+    status: 'done',
+    author: 'Matt Haig',
+    bookFormat: 'audiobook',
+    audiobookSource: 'bookbeat',
+    dateAdded: '2025-03-01T00:00:00Z',
+    dateConsumed: '2025-04-05T00:00:00Z',
+    consumedYear: 2025,
+    rating: 3,
+    releaseYear: 2020,
+    createdAt: '2025-03-01T00:00:00Z',
+    updatedAt: '2025-04-05T00:00:00Z',
+  },
+  {
+    id: 'mi-book-midnight-want',
+    title: 'Midnight Library',
+    mediaType: 'book',
+    status: 'want',
+    author: 'Matt Haig',
+    bookFormat: 'physical',
+    dateAdded: '2026-02-28T00:00:00Z',
+    sourcePerson: 'Kristin',
+    releaseYear: 2020,
+    createdAt: '2026-02-28T00:00:00Z',
+    updatedAt: '2026-02-28T00:00:00Z',
   },
 
   // Movies — done
@@ -289,9 +322,9 @@ export const mediaItems: MediaItem[] = [
 export const consumptionGoals: ConsumptionGoal[] = [
   // 2026 targets
   { id: 'cg-2026-book', year: 2026, mediaType: 'book', target: 12 },
-  { id: 'cg-2026-movie', year: 2026, mediaType: 'movie', target: 24 },
+  { id: 'cg-2026-movie', year: 2026, mediaType: 'movie', target: 20 },
   { id: 'cg-2026-tv', year: 2026, mediaType: 'tv_season', target: 8 },
-  { id: 'cg-2026-podcast', year: 2026, mediaType: 'podcast', target: 4 },
+  { id: 'cg-2026-podcast', year: 2026, mediaType: 'podcast', target: 6 },
 
   // 2025 targets (historical)
   { id: 'cg-2025-book', year: 2025, mediaType: 'book', target: 10 },
