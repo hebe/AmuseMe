@@ -4,39 +4,45 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, BookOpen, Plus, Target } from 'lucide-react'
 
-const navItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/library', label: 'Library', icon: BookOpen },
-  { href: '/goals', label: 'Goals', icon: Target },
-]
-
 export function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-stretch border-t border-border bg-background">
-      {/* Home */}
-      <NavItem href="/" label="Home" icon={Home} active={pathname === '/'} />
+    // h-16 is the visible nav height. The inline style adds env(safe-area-inset-bottom)
+    // on top so the bar extends behind the iOS home indicator instead of competing with it.
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-stretch border-t border-border bg-background"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      <div className="flex h-16 w-full items-stretch">
+        {/* Home */}
+        <NavItem href="/" label="Home" icon={Home} active={pathname === '/'} />
 
-      {/* Library */}
-      <NavItem href="/library" label="Library" icon={BookOpen} active={pathname.startsWith('/library')} />
+        {/* Library */}
+        <NavItem
+          href="/library"
+          label="Library"
+          icon={BookOpen}
+          active={pathname.startsWith('/library')}
+        />
 
-      {/* Add — prominent centre action */}
-      <Link
-        href="/add"
-        className="flex flex-1 flex-col items-center justify-center gap-0.5 text-primary transition-opacity active:opacity-70"
-        aria-label="Add item"
-      >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <Plus className="h-5 w-5" strokeWidth={2.5} />
-        </span>
-      </Link>
+        {/* Add — prominent centre action, always pre-selects want */}
+        <AddButton active={pathname.startsWith('/add')} />
 
-      {/* Goals */}
-      <NavItem href="/goals" label="Goals" icon={Target} active={pathname.startsWith('/goals')} />
+        {/* Goals */}
+        <NavItem
+          href="/goals"
+          label="Goals"
+          icon={Target}
+          active={pathname.startsWith('/goals')}
+        />
+      </div>
     </nav>
   )
 }
+
+// ─── Nav item ─────────────────────────────────────────────────────────────────
+// When active, renders a non-interactive span so tapping the current tab is a no-op.
 
 function NavItem({
   href,
@@ -49,15 +55,53 @@ function NavItem({
   icon: React.ElementType
   active: boolean
 }) {
+  const className = `flex flex-1 flex-col items-center justify-center gap-0.5 text-xs ${
+    active ? 'text-foreground' : 'text-muted-foreground transition-colors active:opacity-70'
+  }`
+
+  if (active) {
+    return (
+      <span className={className} aria-current="page">
+        <Icon className="h-5 w-5" strokeWidth={2} />
+        <span className="leading-none">{label}</span>
+      </span>
+    )
+  }
+
+  return (
+    <Link href={href} className={className}>
+      <Icon className="h-5 w-5" strokeWidth={1.5} />
+      <span className="leading-none">{label}</span>
+    </Link>
+  )
+}
+
+// ─── Add button ───────────────────────────────────────────────────────────────
+
+function AddButton({ active }: { active: boolean }) {
+  if (active) {
+    return (
+      <span
+        className="flex flex-1 flex-col items-center justify-center"
+        aria-current="page"
+        aria-label="Add item"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-60">
+          <Plus className="h-5 w-5" strokeWidth={2.5} />
+        </span>
+      </span>
+    )
+  }
+
   return (
     <Link
-      href={href}
-      className={`flex flex-1 flex-col items-center justify-center gap-0.5 text-xs transition-colors active:opacity-70 ${
-        active ? 'text-foreground' : 'text-muted-foreground'
-      }`}
+      href="/add?status=want"
+      className="flex flex-1 flex-col items-center justify-center transition-opacity active:opacity-70"
+      aria-label="Add item"
     >
-      <Icon className="h-5 w-5" strokeWidth={active ? 2 : 1.5} />
-      <span className="leading-none">{label}</span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <Plus className="h-5 w-5" strokeWidth={2.5} />
+      </span>
     </Link>
   )
 }

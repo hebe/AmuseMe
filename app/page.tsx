@@ -12,13 +12,6 @@ const mediaLabels: Record<MediaType, string> = {
 }
 
 export default function DashboardPage() {
-  const today = new Date(2026, 2, 7) // mock-stable date
-  const dateLabel = today.toLocaleDateString('no-NO', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
-
   const currentGoals = consumptionGoals.filter((g) => g.year === CURRENT_YEAR)
   const recent = recentItems(3)
 
@@ -26,10 +19,7 @@ export default function DashboardPage() {
     <main className="flex flex-col gap-8 px-4 pt-8">
       {/* ── Header ─────────────────────────────────────────────── */}
       <header>
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-          {dateLabel}
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight">AmuseMe</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">AmuseMe</h1>
       </header>
 
       {/* ── Goals widget ───────────────────────────────────────── */}
@@ -73,6 +63,7 @@ export default function DashboardPage() {
       </section>
 
       {/* ── Recent activity ────────────────────────────────────── */}
+      {/* Future (M5): this section becomes the "Amuse me!" recommendations entry point */}
       <section aria-labelledby="recent-heading">
         <h2 id="recent-heading" className="mb-3 text-sm font-medium">
           Recent activity
@@ -119,7 +110,7 @@ export default function DashboardPage() {
           href="/add?status=want"
           className="flex flex-1 items-center justify-center rounded-xl bg-foreground py-4 text-sm font-medium text-background transition-opacity hover:opacity-90 active:opacity-80"
         >
-          + Save for later
+          + Save recommendation
         </Link>
       </section>
     </main>
