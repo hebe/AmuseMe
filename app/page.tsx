@@ -1,20 +1,44 @@
+'use client'
+
+/**
+ * Dashboard — converted from server component to client component so it can
+ * read live data from MediaItemsContext and GoalsContext (both hydrated with
+ * server-fetched data from layout.tsx, so there's still no loading flash).
+ *
+ * Changes from the mock-data version:
+ *   - `consumptionGoals` → `goals` from useGoals()
+ *   - `mediaItems`       → `items` from useMediaItemsContext()
+ *   - `recentItems(3)`   → computed inline (sort by dateConsumed ?? dateAdded)
+ */
+
 import Link from 'next/link'
-import { consumptionGoals, mediaItems, recentItems } from '@/lib/mock-data'
+import { useMediaItemsContext } from '@/contexts/MediaItemsContext'
+import { useGoals } from '@/hooks/useGoals'
 import { getGoalProgress } from '@/lib/utils'
 import type { MediaType } from '@/lib/types'
 
 const CURRENT_YEAR = 2026
 
 const mediaLabels: Record<MediaType, string> = {
-  book: 'Books',
-  movie: 'Movies',
+  book:      'Books',
+  movie:     'Movies',
   tv_season: 'TV seasons',
-  podcast: 'Podcasts',
+  podcast:   'Podcasts',
 }
 
 export default function DashboardPage() {
-  const currentGoals = consumptionGoals.filter((g) => g.year === CURRENT_YEAR)
-  const recent = recentItems(3)
+  const { items } = useMediaItemsContext()
+  const { goals }  = useGoals()
+
+  const currentGoals = goals.filter((g) => g.year === CURRENT_YEAR)
+
+  const recent = [...items]
+    .sort((a, b) => {
+      const dateA = a.dateConsumed ?? a.dateAdded
+      const dateB = b.dateConsumed ?? b.dateAdded
+      return dateB.localeCompare(dateA)
+    })
+    .slice(0, 3)
 
   return (
     <main className="flex flex-col gap-8 px-4 pt-8">
@@ -43,8 +67,8 @@ export default function DashboardPage() {
               const { consumed, target, percent } = getGoalProgress(
                 CURRENT_YEAR,
                 goal.mediaType,
-                mediaItems,
-                consumptionGoals
+                items,
+                goals
               )
               return (
                 <div key={goal.id} className="flex flex-col gap-1">

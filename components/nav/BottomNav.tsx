@@ -7,6 +7,9 @@ import { Home, BookOpen, Plus, Target } from 'lucide-react'
 export function BottomNav() {
   const pathname = usePathname()
 
+  // Login page has its own full-screen layout — no nav needed there
+  if (pathname === '/login') return null
+
   return (
     // h-16 is the visible nav height. The inline style adds env(safe-area-inset-bottom)
     // on top so the bar extends behind the iOS home indicator instead of competing with it.
