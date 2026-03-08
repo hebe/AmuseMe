@@ -115,6 +115,7 @@ export function AddItemForm({
       ? editItem.dateConsumed.split('T')[0]
       : new Date().toISOString().split('T')[0]
   )
+  const [notes, setNotes] = useState(editItem?.notes ?? '')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   // ── Duplicate detection state ──────────────────────────────────────────────
@@ -228,6 +229,7 @@ export function AddItemForm({
           mediaType === 'book' && bookFormat === 'audiobook' ? audiobookSource : undefined,
         movieVenue:
           mediaType === 'movie' && status === 'done' ? movieVenue : undefined,
+        notes: notes.trim() || undefined,
         dateConsumed: consumed,
         consumedYear: consumed ? new Date(consumed).getFullYear() : undefined,
       })
@@ -246,6 +248,7 @@ export function AddItemForm({
       updatedAt: now,
       dateAdded: now,
       ...(author.trim()     && { author: author.trim() }),
+      ...(notes.trim()      && { notes: notes.trim() }),
       ...(provider          && { provider }),
       ...(sourceText.trim() && { sourceText: sourceText.trim() }),
       ...(sourceUrl.trim()  && { sourceUrl: sourceUrl.trim() }),
@@ -467,6 +470,17 @@ export function AddItemForm({
           />
         </Field>
       )}
+
+      {/* ── Notes ── */}
+      <Field label="Notes">
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Anything worth remembering…"
+          rows={3}
+          className={inputClass + ' resize-none'}
+        />
+      </Field>
 
       {/* ── Submit ── */}
       <button
