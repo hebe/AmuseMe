@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 import { BottomNav } from '@/components/nav/BottomNav'
+import { Providers } from './providers'
 
 const geist = Geist({
   // Use '--font-sans' so Geist slots directly into the variable shadcn's theme reads.
@@ -33,15 +34,17 @@ export default function RootLayout({
   return (
     <html lang="no">
       <body className={`${geist.variable} font-sans antialiased`}>
-        {/* pb-16 keeps content above the fixed bottom nav.
-            The extra env() padding ensures content also clears the iOS home indicator. */}
-        <div
-          className="mx-auto min-h-screen max-w-md pb-16"
-          style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
-        >
-          {children}
-        </div>
-        <BottomNav />
+        <Providers>
+          {/* pb-16 keeps content above the fixed bottom nav.
+              The extra env() padding ensures content also clears the iOS home indicator. */}
+          <div
+            className="mx-auto min-h-screen max-w-md pb-16"
+            style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
+          >
+            {children}
+          </div>
+          <BottomNav />
+        </Providers>
       </body>
     </html>
   )
