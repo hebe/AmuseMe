@@ -77,29 +77,43 @@ const inputClass =
 
 type DuplicateMatch = { item: MediaItem; confidence: 'low' | 'high' }
 
-export function AddItemForm() {
+export function AddItemForm({
+  editItem,
+  onSaveEdit,
+}: {
+  /** When provided the form runs in edit mode: pre-populated, saves via updateItem. */
+  editItem?: MediaItem
+  /** Called after a successful save in edit mode (e.g. exit edit mode). */
+  onSaveEdit?: () => void
+} = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { items, addItem, updateItem } = useMediaItems()
 
   // Pre-populate status from ?status=done|want (dashboard quick-action buttons)
+  // Ignored in edit mode (editItem.status takes precedence).
   const initialStatus: MediaStatus =
     searchParams.get('status') === 'done' ? 'done' : 'want'
 
-  // ── Form state ─────────────────────────────────────────────────────────────
-  const [title, setTitle] = useState('')
-  const [mediaType, setMediaType] = useState<MediaType>('book')
-  const [status, setStatus] = useState<MediaStatus>(initialStatus)
-  const [author, setAuthor] = useState('')
-  const [provider, setProvider] = useState<StreamingProvider | ''>('')
-  const [sourceText, setSourceText] = useState('')
-  const [sourceUrl, setSourceUrl] = useState('')
-  const [movieVenue, setMovieVenue] = useState<'cinema' | 'home' | 'other'>('home')
-  const [bookFormat, setBookFormat] = useState<BookFormat>('physical')
-  const [audiobookSource, setAudiobookSource] = useState<AudiobookSource>('bookbeat')
-  // Default date consumed = today (ISO date string YYYY-MM-DD for the date input)
-  const [dateConsumed, setDateConsumed] = useState(
-    () => new Date().toISOString().split('T')[0]
+  // ── Form state — seeded from editItem when in edit mode ────────────────────
+  const [title, setTitle] = useState(editItem?.title ?? '')
+  const [mediaType, setMediaType] = useState<MediaType>(editItem?.mediaType ?? 'book')
+  const [status, setStatus] = useState<MediaStatus>(editItem?.status ?? initialStatus)
+  const [author, setAuthor] = useState(editItem?.author ?? '')
+  const [provider, setProvider] = useState<StreamingProvider | ''>(editItem?.provider ?? '')
+  const [sourceText, setSourceText] = useState(editItem?.sourceText ?? '')
+  const [sourceUrl, setSourceUrl] = useState(editItem?.sourceUrl ?? '')
+  const [movieVenue, setMovieVenue] = useState<'cinema' | 'home' | 'other'>(
+    editItem?.movieVenue ?? 'home'
+  )
+  const [bookFormat, setBookFormat] = useState<BookFormat>(editItem?.bookFormat ?? 'physical')
+  const [audiobookSource, setAudiobookSource] = useState<AudiobookSource>(
+    editItem?.audiobookSource ?? 'bookbeat'
+  )
+  const [dateConsumed, setDateConsumed] = useState(() =>
+    editItem?.dateConsumed
+      ? editItem.dateConsumed.split('T')[0]
+      : new Date().toISOString().split('T')[0]
   )
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -110,8 +124,8 @@ export function AddItemForm() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
-    // Only run duplicate detection when logging as done — no point for want list
-    if (status !== 'done' || !title.trim() || duplicateDismissed) {
+    // Skip duplicate detection entirely in edit mode (item already exists in the list)
+    if (!!editItem || status !== 'done' || !title.trim() || duplicateDismissed) {
       setDuplicate(null)
       return
     }
@@ -198,6 +212,31 @@ export function AddItemForm() {
         ? new Date(dateConsumed).toISOString()
         : undefined
 
+    // ── Edit mode: patch the existing item ───────────────────────────────────
+    if (editItem) {
+      updateItem(editItem.id, {
+        title: title.trim(),
+        mediaType,
+        status,
+        // Explicitly pass undefined to clear fields the user has emptied
+        author: author.trim() || undefined,
+        provider: provider || undefined,
+        sourceText: sourceText.trim() || undefined,
+        sourceUrl: sourceUrl.trim() || undefined,
+        bookFormat: mediaType === 'book' ? bookFormat : undefined,
+        audiobookSource:
+          mediaType === 'book' && bookFormat === 'audiobook' ? audiobookSource : undefined,
+        movieVenue:
+          mediaType === 'movie' && status === 'done' ? movieVenue : undefined,
+        dateConsumed: consumed,
+        consumedYear: consumed ? new Date(consumed).getFullYear() : undefined,
+      })
+      toast.success('Changes saved')
+      onSaveEdit?.()
+      return
+    }
+
+    // ── Add mode: create a new item ───────────────────────────────────────────
     const newItem: MediaItem = {
       id: `item-${Date.now()}`,
       title: title.trim(),
@@ -434,7 +473,9 @@ export function AddItemForm() {
         type="submit"
         className="mt-2 w-full rounded-xl bg-foreground py-3.5 text-sm font-semibold text-primary-foreground transition-opacity active:opacity-80"
       >
-        {status === 'done' ? 'Log as consumed' : 'Save to want list'}
+        {editItem
+          ? 'Save changes'
+          : status === 'done' ? 'Log as consumed' : 'Save to want list'}
       </button>
 
     </form>
