@@ -5,7 +5,8 @@
       "Bash(npm install)",
       "Bash(npx shadcn@latest init -d)",
       "Bash(gh issue list --repo hebe/AmuseMe --limit 50 --json number,title,milestone,labels,state)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(npm run build)"
     ]
   }
 }

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { fuzzyMatch, cn } from '@/lib/utils'
-import type { MediaType, MediaStatus, BookFormat, AudiobookSource, MediaItem } from '@/lib/types'
+import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem } from '@/lib/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Small reusable sub-components (scoped to this file)
@@ -91,9 +91,10 @@ export function AddItemForm() {
   const [mediaType, setMediaType] = useState<MediaType>('book')
   const [status, setStatus] = useState<MediaStatus>(initialStatus)
   const [author, setAuthor] = useState('')
+  const [provider, setProvider] = useState<StreamingProvider | ''>('')
   const [sourceText, setSourceText] = useState('')
-  const [sourcePerson, setSourcePerson] = useState('')
   const [sourceUrl, setSourceUrl] = useState('')
+  const [movieVenue, setMovieVenue] = useState<'cinema' | 'home' | 'other'>('home')
   const [bookFormat, setBookFormat] = useState<BookFormat>('physical')
   const [audiobookSource, setAudiobookSource] = useState<AudiobookSource>('bookbeat')
   // Default date consumed = today (ISO date string YYYY-MM-DD for the date input)
@@ -205,10 +206,11 @@ export function AddItemForm() {
       createdAt: now,
       updatedAt: now,
       dateAdded: now,
-      ...(author.trim()       && { author: author.trim() }),
-      ...(sourceText.trim()   && { sourceText: sourceText.trim() }),
-      ...(sourcePerson.trim() && { sourcePerson: sourcePerson.trim() }),
-      ...(sourceUrl.trim()    && { sourceUrl: sourceUrl.trim() }),
+      ...(author.trim()     && { author: author.trim() }),
+      ...(provider          && { provider }),
+      ...(sourceText.trim() && { sourceText: sourceText.trim() }),
+      ...(sourceUrl.trim()  && { sourceUrl: sourceUrl.trim() }),
+      ...(mediaType === 'movie' && status === 'done' && { movieVenue }),
       ...(mediaType === 'book' && { bookFormat }),
       ...(mediaType === 'book' && bookFormat === 'audiobook' && { audiobookSource }),
       ...(consumed && {
@@ -312,6 +314,30 @@ export function AddItemForm() {
         </Field>
       )}
 
+      {/* ── Provider — TV and movies only ── */}
+      {(mediaType === 'tv_season' || mediaType === 'movie') && (
+        <Field label="Provider">
+          <select
+            value={provider}
+            onChange={(e) => setProvider(e.target.value as StreamingProvider | '')}
+            className={cn(inputClass, 'cursor-pointer')}
+          >
+            <option value="">Not sure / not set</option>
+            <option value="apple">Apple TV+</option>
+            <option value="disney">Disney+</option>
+            <option value="hbo">HBO Max</option>
+            <option value="netflix">Netflix</option>
+            <option value="nrk">NRK TV</option>
+            <option value="paramount">Paramount+</option>
+            <option value="prime">Prime Video</option>
+            <option value="skyshowtime">SkyShowtime</option>
+            <option value="tv2">TV 2 Play</option>
+            <option value="viaplay">Viaplay</option>
+            <option value="other">Other</option>
+          </select>
+        </Field>
+      )}
+
       {/* ── Source section ── */}
       <div className="flex flex-col gap-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
@@ -322,13 +348,6 @@ export function AddItemForm() {
           value={sourceText}
           onChange={(e) => setSourceText(e.target.value)}
           placeholder="Where did you hear about it?"
-          className={inputClass}
-        />
-        <input
-          type="text"
-          value={sourcePerson}
-          onChange={(e) => setSourcePerson(e.target.value)}
-          placeholder="Who recommended it?"
           className={inputClass}
         />
         <div>
@@ -377,6 +396,21 @@ export function AddItemForm() {
             <option value="fabel">Fabel</option>
             <option value="other">Other</option>
           </select>
+        </Field>
+      )}
+
+      {/* ── Venue — movies + done only ── */}
+      {mediaType === 'movie' && status === 'done' && (
+        <Field label="Watched at">
+          <SegmentedControl
+            options={[
+              { value: 'cinema', label: 'Cinema' },
+              { value: 'home', label: 'At home' },
+              { value: 'other', label: 'Other' },
+            ]}
+            value={movieVenue}
+            onChange={(v) => setMovieVenue(v as 'cinema' | 'home' | 'other')}
+          />
         </Field>
       )}
 

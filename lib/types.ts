@@ -3,6 +3,18 @@ export type MediaStatus = 'want' | 'done'
 export type BookFormat = 'physical' | 'ebook' | 'audiobook'
 export type AudiobookSource = 'bookbeat' | 'storytel' | 'podme' | 'fabel' | 'other'
 export type MovieVenue = 'cinema' | 'home' | 'other'
+export type StreamingProvider =
+  | 'apple'
+  | 'disney'
+  | 'hbo'
+  | 'netflix'
+  | 'nrk'
+  | 'paramount'
+  | 'prime'
+  | 'skyshowtime'
+  | 'tv2'
+  | 'viaplay'
+  | 'other'
 
 export interface ConsumptionGoal {
   id: string
@@ -49,6 +61,9 @@ export interface MediaItem {
   author?: string
   bookFormat?: BookFormat
   audiobookSource?: AudiobookSource
+
+  // movie + tv_season fields
+  provider?: StreamingProvider   // streaming service (Netflix, HBO Max, etc.)
 
   // movie fields
   director?: string
