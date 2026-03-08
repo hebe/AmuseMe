@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaCard } from '@/components/media/MediaCard'
+import { QuickLogDrawer } from '@/components/media/QuickLogDrawer'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { cn } from '@/lib/utils'
 import type { MediaItem, MediaStatus, MediaType } from '@/lib/types'
@@ -63,6 +64,7 @@ const emptyMessages: Record<MediaStatus, Record<FilterType, { heading: string; c
 export default function LibraryPage() {
   const [status, setStatus] = useState<MediaStatus>('want')
   const [filter, setFilter] = useState<FilterType>('all')
+  const [loggingItem, setLoggingItem] = useState<MediaItem | null>(null)
   const { items, updateItem } = useMediaItems()
 
   // Apply both filters simultaneously
@@ -75,14 +77,19 @@ export default function LibraryPage() {
   function handleToggleStatus(id: string) {
     const item = items.find((i) => i.id === id)
     if (!item) return
-    const newStatus: MediaStatus = item.status === 'done' ? 'want' : 'done'
-    updateItem(id, {
-      status: newStatus,
-      // Stamp dateConsumed when moving to done; clear it when moving back to want
-      ...(newStatus === 'done'
-        ? { dateConsumed: new Date().toISOString(), consumedYear: new Date().getFullYear() }
-        : { dateConsumed: undefined, consumedYear: undefined }),
-    })
+    if (item.status === 'want') {
+      // want → done: open quick-log drawer to capture date + notes
+      setLoggingItem(item)
+    } else {
+      // done → want: immediate, no form needed
+      updateItem(id, { status: 'want', dateConsumed: undefined, consumedYear: undefined })
+    }
+  }
+
+  function handleLog(patch: { dateConsumed: string; consumedYear: number; notes?: string }) {
+    if (!loggingItem) return
+    updateItem(loggingItem.id, { status: 'done', ...patch })
+    setLoggingItem(null)
   }
 
   const emptyMsg = emptyMessages[status][filter]
@@ -164,6 +171,15 @@ export default function LibraryPage() {
           </ul>
         )}
       </div>
+
+      {/* ── Quick-log drawer ────────────────────────────────────── */}
+      {loggingItem && (
+        <QuickLogDrawer
+          item={loggingItem}
+          onClose={() => setLoggingItem(null)}
+          onLog={handleLog}
+        />
+      )}
     </main>
   )
 }
