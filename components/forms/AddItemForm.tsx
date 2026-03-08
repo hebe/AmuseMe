@@ -94,6 +94,7 @@ export function AddItemForm() {
   const [provider, setProvider] = useState<StreamingProvider | ''>('')
   const [sourceText, setSourceText] = useState('')
   const [sourceUrl, setSourceUrl] = useState('')
+  const [movieVenue, setMovieVenue] = useState<'cinema' | 'home' | 'other'>('home')
   const [bookFormat, setBookFormat] = useState<BookFormat>('physical')
   const [audiobookSource, setAudiobookSource] = useState<AudiobookSource>('bookbeat')
   // Default date consumed = today (ISO date string YYYY-MM-DD for the date input)
@@ -209,6 +210,7 @@ export function AddItemForm() {
       ...(provider          && { provider }),
       ...(sourceText.trim() && { sourceText: sourceText.trim() }),
       ...(sourceUrl.trim()  && { sourceUrl: sourceUrl.trim() }),
+      ...(mediaType === 'movie' && status === 'done' && { movieVenue }),
       ...(mediaType === 'book' && { bookFormat }),
       ...(mediaType === 'book' && bookFormat === 'audiobook' && { audiobookSource }),
       ...(consumed && {
@@ -394,6 +396,21 @@ export function AddItemForm() {
             <option value="fabel">Fabel</option>
             <option value="other">Other</option>
           </select>
+        </Field>
+      )}
+
+      {/* ── Venue — movies + done only ── */}
+      {mediaType === 'movie' && status === 'done' && (
+        <Field label="Watched at">
+          <SegmentedControl
+            options={[
+              { value: 'cinema', label: 'Cinema' },
+              { value: 'home', label: 'At home' },
+              { value: 'other', label: 'Other' },
+            ]}
+            value={movieVenue}
+            onChange={(v) => setMovieVenue(v as 'cinema' | 'home' | 'other')}
+          />
         </Field>
       )}
 
