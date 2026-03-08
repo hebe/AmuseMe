@@ -55,6 +55,9 @@ export const mediaItems = pgTable('media_items', {
   userId: text('user_id').references(() => users.id),
 
   title: text('title').notNull(),
+  // Original title in source language — useful for Nordic/international content
+  // where the app title may be a translation (e.g. title: "Another Round", titleOriginal: "Druk")
+  titleOriginal: text('title_original'),
   mediaType: text('media_type').notNull(),   // MediaType
   status: text('status').notNull(),           // MediaStatus
 

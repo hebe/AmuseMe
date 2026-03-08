@@ -6,7 +6,14 @@
       "Bash(npx shadcn@latest init -d)",
       "Bash(gh issue list --repo hebe/AmuseMe --limit 50 --json number,title,milestone,labels,state)",
       "WebFetch(domain:github.com)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(grep -rh '\"\"seriesId\"\"' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(grep -n \"series-p-rni\\\\|porni\\\\|Porni\" /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(grep -E '\"\"id\"\".*-[a-z]-|\"\"title\"\".*[øåæ]' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(grep -E '\"\"title\"\".*[øåæ]' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(grep -E '\"\"id\"\": \"\"mi-book-.*-[aeiou]-' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(ls -1 /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
+      "Bash(npx tsx --env-file=.env.local scripts/import.ts)"
     ]
   }
 }

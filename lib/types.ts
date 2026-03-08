@@ -42,6 +42,7 @@ export interface TvSeries {
 export interface MediaItem {
   id: string
   title: string
+  titleOriginal?: string  // original title in source language (e.g. "Druk" for "Another Round")
   mediaType: MediaType
   status: MediaStatus
 
