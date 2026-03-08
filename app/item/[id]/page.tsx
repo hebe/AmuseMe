@@ -247,9 +247,9 @@ export default function ItemDetailPage() {
 
       {/* ── Notes ── */}
       {item.notes && (
-        <Section>
-          <p className="py-3 text-sm leading-relaxed">{item.notes}</p>
-        </Section>
+        <p className="my-6 px-2 text-sm leading-relaxed text-muted-foreground italic">
+          &ldquo;{item.notes}&rdquo;
+        </p>
       )}
 
       {/* ── Status toggle ── */}
