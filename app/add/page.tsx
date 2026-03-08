@@ -1,11 +1,21 @@
+import { Suspense } from 'react'
 import { PageHeader } from '@/components/nav/PageHeader'
+import { AddItemForm } from '@/components/forms/AddItemForm'
 
-// M3 — Add item form (status pre-selectable via ?status=done|want)
+/**
+ * Add Item page — M3 (#16, #17, #18, #19)
+ *
+ * Kept as a server component so it can be statically optimised.
+ * AddItemForm is the client island; it needs <Suspense> because it reads
+ * useSearchParams() for the ?status= pre-population.
+ */
 export default function AddPage() {
   return (
     <main className="px-4">
-      <PageHeader title="Add item" backHref="/" />
-      <p className="mt-4 text-sm text-muted-foreground">Coming in M3.</p>
+      <PageHeader title="Add item" backHref="/library" />
+      <Suspense>
+        <AddItemForm />
+      </Suspense>
     </main>
   )
 }
