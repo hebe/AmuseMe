@@ -92,7 +92,6 @@ export function AddItemForm() {
   const [status, setStatus] = useState<MediaStatus>(initialStatus)
   const [author, setAuthor] = useState('')
   const [sourceText, setSourceText] = useState('')
-  const [sourcePerson, setSourcePerson] = useState('')
   const [sourceUrl, setSourceUrl] = useState('')
   const [bookFormat, setBookFormat] = useState<BookFormat>('physical')
   const [audiobookSource, setAudiobookSource] = useState<AudiobookSource>('bookbeat')
@@ -206,9 +205,8 @@ export function AddItemForm() {
       updatedAt: now,
       dateAdded: now,
       ...(author.trim()       && { author: author.trim() }),
-      ...(sourceText.trim()   && { sourceText: sourceText.trim() }),
-      ...(sourcePerson.trim() && { sourcePerson: sourcePerson.trim() }),
-      ...(sourceUrl.trim()    && { sourceUrl: sourceUrl.trim() }),
+      ...(sourceText.trim() && { sourceText: sourceText.trim() }),
+      ...(sourceUrl.trim()  && { sourceUrl: sourceUrl.trim() }),
       ...(mediaType === 'book' && { bookFormat }),
       ...(mediaType === 'book' && bookFormat === 'audiobook' && { audiobookSource }),
       ...(consumed && {
@@ -322,13 +320,6 @@ export function AddItemForm() {
           value={sourceText}
           onChange={(e) => setSourceText(e.target.value)}
           placeholder="Where did you hear about it?"
-          className={inputClass}
-        />
-        <input
-          type="text"
-          value={sourcePerson}
-          onChange={(e) => setSourcePerson(e.target.value)}
-          placeholder="Who recommended it?"
           className={inputClass}
         />
         <div>
