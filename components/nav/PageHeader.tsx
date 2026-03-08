@@ -4,15 +4,18 @@ import { ChevronLeft } from 'lucide-react'
 interface PageHeaderProps {
   title: string
   backHref?: string
+  /** Optional node rendered flush-right (e.g. an Edit or Cancel button). */
+  rightAction?: React.ReactNode
 }
 
 /**
  * Consistent page-level header used across all non-dashboard routes.
  * Pass `backHref` to show a back button (e.g. "/library" from item detail).
+ * Pass `rightAction` to render a button or link on the right side of the header.
  */
-export function PageHeader({ title, backHref }: PageHeaderProps) {
+export function PageHeader({ title, backHref, rightAction }: PageHeaderProps) {
   return (
-    <header className="flex items-center gap-1 pb-2 pt-8">
+    <header className="flex items-start gap-1 pb-2 pt-8">
       {backHref && (
         <Link
           href={backHref}
@@ -22,7 +25,10 @@ export function PageHeader({ title, backHref }: PageHeaderProps) {
           <ChevronLeft className="h-5 w-5" />
         </Link>
       )}
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+      <h1 className="flex-1 text-2xl font-semibold tracking-tight leading-tight">{title}</h1>
+      {rightAction && (
+        <div className="shrink-0 ml-2">{rightAction}</div>
+      )}
     </header>
   )
 }
