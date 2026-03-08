@@ -50,14 +50,14 @@ export function MediaCard({ item, onToggleStatus }: MediaCardProps) {
       <button
         onClick={() => onToggleStatus(item.id)}
         className={cn(
-          'absolute right-3 shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
+          'absolute right-3 shrink-0 transition-colors',
           item.status === 'done'
-            ? 'bg-foreground text-background'
-            : 'bg-muted text-muted-foreground hover:bg-foreground/10'
+            ? 'p-2 text-muted-foreground/40 hover:text-muted-foreground'
+            : 'rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-foreground/10'
         )}
         aria-label={item.status === 'done' ? 'Move back to want list' : 'Mark as done'}
       >
-        {item.status === 'done' ? 'Done' : 'Want'}
+        {item.status === 'done' ? '✓' : 'Done'}
       </button>
     </div>
   )

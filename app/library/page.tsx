@@ -6,11 +6,29 @@ import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaCard } from '@/components/media/MediaCard'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { cn } from '@/lib/utils'
-import type { MediaStatus, MediaType } from '@/lib/types'
+import type { MediaItem, MediaStatus, MediaType } from '@/lib/types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type FilterType = MediaType | 'all'
+
+type YearGroup = { year: number | null; items: MediaItem[] }
+
+function groupByYear(items: MediaItem[]): YearGroup[] {
+  const map = new Map<number | null, MediaItem[]>()
+  for (const item of items) {
+    const year = item.consumedYear ?? null
+    if (!map.has(year)) map.set(year, [])
+    map.get(year)!.push(item)
+  }
+  return [...map.entries()]
+    .sort(([a], [b]) => {
+      if (a === null) return 1
+      if (b === null) return -1
+      return b - a // newest first
+    })
+    .map(([year, items]) => ({ year, items }))
+}
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -114,10 +132,29 @@ export default function LibraryPage() {
       </div>
 
       {/* ── Results ─────────────────────────────────────────────── */}
-      <div className="mt-4">
+      <div className="mt-4 pb-8">
         {filtered.length === 0 ? (
           <EmptyState heading={emptyMsg.heading} cta={emptyMsg.cta} status={status} />
+        ) : status === 'done' ? (
+          // Done list: grouped by consumed year, newest first
+          <div className="flex flex-col gap-6">
+            {groupByYear(filtered).map(({ year, items: groupItems }) => (
+              <section key={year ?? 'unknown'}>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  {year ?? '—'}
+                </p>
+                <ul className="flex flex-col gap-2">
+                  {groupItems.map((item) => (
+                    <li key={item.id}>
+                      <MediaCard item={item} onToggleStatus={handleToggleStatus} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
         ) : (
+          // Want list: flat
           <ul className="flex flex-col gap-2">
             {filtered.map((item) => (
               <li key={item.id}>
