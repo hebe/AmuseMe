@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { MediaType } from "./types"
+import type { ConsumptionGoal, MediaItem, MediaType } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -25,12 +25,20 @@ export function fuzzyMatch(a: string, b: string): boolean {
 
 /**
  * Compute goal progress for a given year and media type.
+ * Pure function — pass items and goals from wherever they live (context, DB, etc.).
  * Returns consumed count, target, and percentage (0–100, capped).
- * Stub: returns zeroes — will be wired to the live items array in M3.
  */
 export function getGoalProgress(
-  _year: number,
-  _mediaType: MediaType
-): { consumed: number; target: number; pct: number } {
-  return { consumed: 0, target: 0, pct: 0 }
+  year: number,
+  mediaType: MediaType,
+  items: MediaItem[],
+  goals: ConsumptionGoal[]
+): { consumed: number; target: number; percent: number } {
+  const goal = goals.find((g) => g.year === year && g.mediaType === mediaType)
+  const target = goal?.target ?? 0
+  const consumed = items.filter(
+    (item) => item.mediaType === mediaType && item.status === 'done' && item.consumedYear === year
+  ).length
+  const percent = target > 0 ? Math.min(100, Math.round((consumed / target) * 100)) : 0
+  return { consumed, target, percent }
 }

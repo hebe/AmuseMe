@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { consumptionGoals, countConsumed, recentItems } from '@/lib/mock-data'
+import { consumptionGoals, mediaItems, recentItems } from '@/lib/mock-data'
+import { getGoalProgress } from '@/lib/utils'
 import type { MediaType } from '@/lib/types'
 
 const CURRENT_YEAR = 2026
@@ -39,20 +40,24 @@ export default function DashboardPage() {
 
           <div className="flex flex-col gap-2.5">
             {currentGoals.map((goal) => {
-              const consumed = countConsumed(goal.mediaType, CURRENT_YEAR)
-              const pct = Math.min(100, Math.round((consumed / goal.target) * 100))
+              const { consumed, target, percent } = getGoalProgress(
+                CURRENT_YEAR,
+                goal.mediaType,
+                mediaItems,
+                consumptionGoals
+              )
               return (
                 <div key={goal.id} className="flex flex-col gap-1">
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">{mediaLabels[goal.mediaType]}</span>
                     <span className="tabular-nums">
-                      {consumed} / {goal.target}
+                      {consumed} / {target}
                     </span>
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-foreground transition-all"
-                      style={{ width: `${pct}%` }}
+                      style={{ width: `${percent}%` }}
                     />
                   </div>
                 </div>
