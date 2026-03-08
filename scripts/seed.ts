@@ -34,8 +34,8 @@ import {
   consumptionGoals,
 } from '../lib/mock-data'
 
-const USERNAME = process.env.SEED_USERNAME
-const PASSWORD = process.env.SEED_PASSWORD
+const USERNAME = process.env.SEED_USERNAME!
+const PASSWORD = process.env.SEED_PASSWORD!
 
 if (!USERNAME || !PASSWORD) {
   console.error('❌  SEED_USERNAME and SEED_PASSWORD must be set in .env.local')

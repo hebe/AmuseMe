@@ -1,7 +1,7 @@
 /**
- * Route protection middleware.
+ * Route protection proxy (Next.js 16 — replaces middleware.ts).
  *
- * Auth.js v5 lets us wrap our middleware with `auth()` so every matched
+ * Auth.js v5 lets us wrap the proxy with `auth()` so every matched
  * request has `req.auth` available (the session, or null if logged out).
  *
  * Rules:
