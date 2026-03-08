@@ -38,6 +38,7 @@ function rowToMediaItem(row: MediaItemRow): MediaItem {
   return {
     id: row.id,
     title: row.title,
+    titleOriginal: row.titleOriginal ?? undefined,
     mediaType: row.mediaType as MediaType,
     status: row.status as MediaStatus,
 
@@ -115,9 +116,10 @@ export async function insertMediaItem(
   await db.insert(mediaItems).values({
     id:     item.id,
     userId,
-    title:      item.title,
-    mediaType:  item.mediaType,
-    status:     item.status,
+    title:         item.title,
+    titleOriginal: item.titleOriginal ?? null,
+    mediaType:     item.mediaType,
+    status:        item.status,
 
     sourceText:   item.sourceText   ?? null,
     sourcePerson: item.sourcePerson ?? null,
