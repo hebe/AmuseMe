@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { fuzzyMatch, cn } from '@/lib/utils'
-import type { MediaType, MediaStatus, BookFormat, AudiobookSource, MediaItem } from '@/lib/types'
+import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem } from '@/lib/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Small reusable sub-components (scoped to this file)
@@ -91,6 +91,7 @@ export function AddItemForm() {
   const [mediaType, setMediaType] = useState<MediaType>('book')
   const [status, setStatus] = useState<MediaStatus>(initialStatus)
   const [author, setAuthor] = useState('')
+  const [provider, setProvider] = useState<StreamingProvider | ''>('')
   const [sourceText, setSourceText] = useState('')
   const [sourceUrl, setSourceUrl] = useState('')
   const [bookFormat, setBookFormat] = useState<BookFormat>('physical')
@@ -204,7 +205,8 @@ export function AddItemForm() {
       createdAt: now,
       updatedAt: now,
       dateAdded: now,
-      ...(author.trim()       && { author: author.trim() }),
+      ...(author.trim()     && { author: author.trim() }),
+      ...(provider          && { provider }),
       ...(sourceText.trim() && { sourceText: sourceText.trim() }),
       ...(sourceUrl.trim()  && { sourceUrl: sourceUrl.trim() }),
       ...(mediaType === 'book' && { bookFormat }),
@@ -307,6 +309,30 @@ export function AddItemForm() {
             placeholder="e.g. Abraham Verghese"
             className={inputClass}
           />
+        </Field>
+      )}
+
+      {/* ── Provider — TV and movies only ── */}
+      {(mediaType === 'tv_season' || mediaType === 'movie') && (
+        <Field label="Provider">
+          <select
+            value={provider}
+            onChange={(e) => setProvider(e.target.value as StreamingProvider | '')}
+            className={cn(inputClass, 'cursor-pointer')}
+          >
+            <option value="">Not sure / not set</option>
+            <option value="apple">Apple TV+</option>
+            <option value="disney">Disney+</option>
+            <option value="hbo">HBO Max</option>
+            <option value="netflix">Netflix</option>
+            <option value="nrk">NRK TV</option>
+            <option value="paramount">Paramount+</option>
+            <option value="prime">Prime Video</option>
+            <option value="skyshowtime">SkyShowtime</option>
+            <option value="tv2">TV 2 Play</option>
+            <option value="viaplay">Viaplay</option>
+            <option value="other">Other</option>
+          </select>
         </Field>
       )}
 
