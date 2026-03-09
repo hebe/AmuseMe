@@ -135,6 +135,8 @@ const FILES = [
   'media_import_2021_non_books_with_imdb_everything.json',
   'media_import_2022_non_books_with_imdb.json',
   'media_import_2023_non_books_with_imdb_style_matched.json',
+  'media_import_2024_non_books_with_imdb_v2.json',
+  'media_import_2025_non_books_with_imdb.json',
 ]
 
 async function run() {

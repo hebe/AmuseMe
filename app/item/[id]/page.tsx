@@ -6,6 +6,7 @@ import { useMediaItems } from '@/hooks/useMediaItems'
 import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaTypeIcon } from '@/components/media/MediaTypeIcon'
 import { AddItemForm } from '@/components/forms/AddItemForm'
+import { RatingHearts } from '@/components/media/RatingHearts'
 import { cn } from '@/lib/utils'
 import type {
   MediaType,
@@ -215,6 +216,16 @@ export default function ItemDetailPage() {
           {item.status === 'done' ? 'Done' : 'Want'}
         </span>
       </div>
+
+      {/* ── Rating (done items only) ── */}
+      {item.status === 'done' && (
+        <div className="mb-4">
+          <RatingHearts
+            rating={item.rating ?? undefined}
+            onChange={(rating) => updateItem(id, { rating })}
+          />
+        </div>
+      )}
 
       {/* ── Type-specific details ── */}
       {typeRows.length > 0 && (

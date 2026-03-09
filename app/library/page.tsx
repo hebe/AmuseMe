@@ -86,7 +86,7 @@ export default function LibraryPage() {
     }
   }
 
-  function handleLog(patch: { dateConsumed: string; consumedYear: number; notes?: string }) {
+  function handleLog(patch: { dateConsumed: string; consumedYear: number; notes?: string; rating?: number }) {
     if (!loggingItem) return
     updateItem(loggingItem.id, { status: 'done', ...patch })
     setLoggingItem(null)
