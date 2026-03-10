@@ -15,9 +15,15 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  type TooltipProps,
 } from 'recharts'
 import type { MediaItem } from '@/lib/types'
+
+// Recharts' TooltipProps typing varies across versions — define it explicitly.
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: { name: Category; value: number }[]
+  label?: string
+}
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 // Three shades of navy/blue matching the app's oklch(* * 258°) palette.
@@ -67,7 +73,7 @@ function buildChartData(items: MediaItem[], fromYear: number): ChartRow[] {
 
 // ─── Custom tooltip ───────────────────────────────────────────────────────────
 
-function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
+function ChartTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
     <div className="rounded-xl border border-border bg-card px-3 py-2 shadow-md text-sm">
