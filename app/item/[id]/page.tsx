@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaTypeIcon } from '@/components/media/MediaTypeIcon'
@@ -113,6 +113,7 @@ function Section({ children }: { children: React.ReactNode }) {
 
 export default function ItemDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const router = useRouter()
   const { getItemById, updateItem } = useMediaItems()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -122,7 +123,7 @@ export default function ItemDetailPage() {
   if (!item) {
     return (
       <main className="px-4">
-        <PageHeader title="Not found" backHref="/library" />
+        <PageHeader title="Not found" onBack={() => router.back()} />
         <p className="mt-4 text-sm text-muted-foreground">
           This item doesn't exist or has been removed.
         </p>
@@ -188,7 +189,7 @@ export default function ItemDetailPage() {
     <main className="px-4 pb-6">
       <PageHeader
         title={item.title}
-        backHref="/library"
+        onBack={() => router.back()}
         rightAction={
           <button
             onClick={() => setIsEditing(true)}

@@ -51,10 +51,10 @@ export function RatingHearts({
               readOnly
                 ? 'cursor-default'
                 : 'cursor-pointer hover:scale-125 active:scale-110',
-              filled ? 'text-rose-400' : 'text-foreground/20',
+              filled ? 'text-foreground' : 'text-foreground/15',
             ].join(' ')}
           >
-            {filled ? '♥' : '♡'}
+            ❤
           </button>
         )
       })}
