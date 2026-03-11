@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Search, X } from 'lucide-react'
 import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaCard } from '@/components/media/MediaCard'
 import { QuickLogDrawer } from '@/components/media/QuickLogDrawer'
@@ -30,6 +31,35 @@ function groupByYear(items: MediaItem[]): YearGroup[] {
       return b - a // newest first
     })
     .map(([year, items]) => ({ year, items }))
+}
+
+// ─── Search helpers ───────────────────────────────────────────────────────────
+
+/**
+ * Normalise a string for diacritic-insensitive matching.
+ * NFD decomposition strips combining marks (å→a, ä→a, ö→o, é→e…).
+ * ø and æ don't decompose via NFD so are handled explicitly.
+ */
+function normaliseForSearch(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // strip combining diacritics
+    .replace(/ø/g, 'o')
+    .replace(/æ/g, 'ae')
+}
+
+function itemMatchesQuery(item: MediaItem, normalisedQuery: string): boolean {
+  const fields = [
+    item.title,
+    item.titleOriginal,
+    item.author,
+    item.director,
+    item.podcastHost,
+  ]
+  return fields.some(
+    (f) => f && normaliseForSearch(f).includes(normalisedQuery)
+  )
 }
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -87,6 +117,8 @@ function LibraryContent() {
       : 'all'
   )
   const [loggingItem, setLoggingItem] = useState<MediaItem | null>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const { items, updateItem } = useMediaItems()
 
   // Keep URL in sync so back-navigation restores the correct filters.
@@ -99,12 +131,34 @@ function LibraryContent() {
     router.replace(`/library?status=${status}&filter=${f}`)
   }
 
-  // Apply both filters simultaneously
-  const filtered = items.filter(
-    (item) =>
-      item.status === status &&
-      (filter === 'all' || item.mediaType === filter)
-  )
+  function toggleSearch() {
+    if (searchOpen) {
+      setSearchOpen(false)
+      setSearchQuery('')
+    } else {
+      setSearchOpen(true)
+    }
+  }
+
+  // Active search: query must be at least 2 chars to avoid noisy single-char results
+  const normalisedQuery = normaliseForSearch(searchQuery.trim())
+  const isSearching = searchOpen && normalisedQuery.length >= 2
+
+  // Want/Done and type pills always apply — even during search.
+  // Search just adds an extra text-match filter on top.
+  const filtered = items
+    .filter(
+      (item) =>
+        item.status === status &&
+        (filter === 'all' || item.mediaType === filter) &&
+        (!isSearching || itemMatchesQuery(item, normalisedQuery))
+    )
+    // In search mode: sort alphabetically so results feel like a find-in-page.
+    // Normal mode preserves natural order.
+    .sort(isSearching
+      ? (a, b) => a.title.localeCompare(b.title)
+      : () => 0
+    )
 
   function handleToggleStatus(id: string) {
     const item = items.find((i) => i.id === id)
@@ -128,10 +182,54 @@ function LibraryContent() {
 
   return (
     <main className="flex flex-col px-4">
-      <PageHeader title="Library" />
+      <PageHeader
+        title="Library"
+        rightAction={
+          <button
+            onClick={toggleSearch}
+            className={cn(
+              'flex h-8 w-8 items-center justify-center rounded-full transition-colors',
+              searchOpen
+                ? 'bg-foreground/10 text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+            aria-label={searchOpen ? 'Close search' : 'Search'}
+          >
+            <Search className="h-5 w-5" strokeWidth={1.5} />
+          </button>
+        }
+      />
+
+      {/* ── Inline search field — appears when searchOpen ──────── */}
+      {searchOpen && (
+        <div className="relative mt-2">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search…"
+            className="w-full rounded-xl border border-border bg-card py-2.5 pl-9 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* ── Want / Done segmented control ──────────────────────── */}
-      <div className="mt-2 flex rounded-xl bg-muted p-1">
+      <div className="mt-3 flex rounded-xl bg-muted p-1">
         {(['want', 'done'] as MediaStatus[]).map((s) => (
           <button
             key={s}
@@ -172,10 +270,31 @@ function LibraryContent() {
 
       {/* ── Results ─────────────────────────────────────────────── */}
       <div className="mt-4 pb-8">
-        {filtered.length === 0 ? (
+        {isSearching ? (
+          // ── Search mode: flat list across all statuses ───────────
+          filtered.length === 0 ? (
+            <p className="py-16 text-center text-sm text-muted-foreground">
+              Nothing found for &ldquo;{searchQuery.trim()}&rdquo;
+            </p>
+          ) : (
+            <>
+              <p className="mb-3 text-xs text-muted-foreground">
+                {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+              </p>
+              <ul className="flex flex-col gap-2">
+                {filtered.map((item) => (
+                  <li key={item.id}>
+                    <MediaCard item={item} onToggleStatus={handleToggleStatus} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        ) : filtered.length === 0 ? (
+          // ── Normal mode: empty state ─────────────────────────────
           <EmptyState heading={emptyMsg.heading} cta={emptyMsg.cta} status={status} />
         ) : status === 'done' ? (
-          // Done list: grouped by consumed year, newest first
+          // ── Normal mode: Done list grouped by year ───────────────
           <div className="flex flex-col gap-6">
             {groupByYear(filtered).map(({ year, items: groupItems }) => (
               <section key={year ?? 'unknown'}>
@@ -193,7 +312,7 @@ function LibraryContent() {
             ))}
           </div>
         ) : (
-          // Want list: flat
+          // ── Normal mode: Want list flat ──────────────────────────
           <ul className="flex flex-col gap-2">
             {filtered.map((item) => (
               <li key={item.id}>
