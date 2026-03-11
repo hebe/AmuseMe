@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { PageHeader } from '@/components/nav/PageHeader'
 import { MediaCard } from '@/components/media/MediaCard'
 import { QuickLogDrawer } from '@/components/media/QuickLogDrawer'
@@ -61,11 +62,42 @@ const emptyMessages: Record<MediaStatus, Record<FilterType, { heading: string; c
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+// useSearchParams() requires a Suspense boundary — wrap the real content.
 export default function LibraryPage() {
-  const [status, setStatus] = useState<MediaStatus>('want')
-  const [filter, setFilter] = useState<FilterType>('all')
+  return (
+    <Suspense>
+      <LibraryContent />
+    </Suspense>
+  )
+}
+
+function LibraryContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Read initial state from URL; fall back to sensible defaults.
+  const statusParam = searchParams.get('status')
+  const filterParam = searchParams.get('filter')
+  const [status, setStatusState] = useState<MediaStatus>(
+    statusParam === 'done' ? 'done' : 'want'
+  )
+  const [filter, setFilterState] = useState<FilterType>(
+    (['book', 'movie', 'tv_season', 'podcast'] as FilterType[]).includes(filterParam as FilterType)
+      ? (filterParam as FilterType)
+      : 'all'
+  )
   const [loggingItem, setLoggingItem] = useState<MediaItem | null>(null)
   const { items, updateItem } = useMediaItems()
+
+  // Keep URL in sync so back-navigation restores the correct filters.
+  function setStatus(s: MediaStatus) {
+    setStatusState(s)
+    router.replace(`/library?status=${s}&filter=${filter}`)
+  }
+  function setFilter(f: FilterType) {
+    setFilterState(f)
+    router.replace(`/library?status=${status}&filter=${f}`)
+  }
 
   // Apply both filters simultaneously
   const filtered = items.filter(
@@ -86,7 +118,7 @@ export default function LibraryPage() {
     }
   }
 
-  function handleLog(patch: { dateConsumed: string; consumedYear: number; notes?: string }) {
+  function handleLog(patch: { dateConsumed: string; consumedYear: number; notes?: string; rating?: number }) {
     if (!loggingItem) return
     updateItem(loggingItem.id, { status: 'done', ...patch })
     setLoggingItem(null)

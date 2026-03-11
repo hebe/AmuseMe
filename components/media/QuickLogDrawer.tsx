@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { RatingHearts } from '@/components/media/RatingHearts'
 import type { MediaItem } from '@/lib/types'
 
 interface QuickLogDrawerProps {
@@ -11,6 +12,7 @@ interface QuickLogDrawerProps {
     dateConsumed: string
     consumedYear: number
     notes?: string
+    rating?: number
   }) => void
 }
 
@@ -31,6 +33,7 @@ function todayString(): string {
 export function QuickLogDrawer({ item, onClose, onLog }: QuickLogDrawerProps) {
   const [date, setDate] = useState(() => todayString())
   const [notes, setNotes] = useState('')
+  const [rating, setRating] = useState<number | undefined>(undefined)
 
   function handleSubmit() {
     const localDate = parseDateLocal(date)
@@ -38,6 +41,7 @@ export function QuickLogDrawer({ item, onClose, onLog }: QuickLogDrawerProps) {
       dateConsumed: localDate.toISOString(),
       consumedYear: localDate.getFullYear(),
       notes: notes.trim() || undefined,
+      rating,
     })
     toast('Logged!', { description: item.title })
   }
@@ -90,6 +94,15 @@ export function QuickLogDrawer({ item, onClose, onLog }: QuickLogDrawerProps) {
             rows={3}
             className="w-full resize-none rounded-xl border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
           />
+        </div>
+
+        {/* Rating */}
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-medium">
+            Rating{' '}
+            <span className="font-normal text-muted-foreground">(optional)</span>
+          </p>
+          <RatingHearts rating={rating} onChange={setRating} />
         </div>
 
         {/* Actions */}

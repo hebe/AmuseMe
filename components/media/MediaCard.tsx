@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { MediaTypeIcon } from './MediaTypeIcon'
 import { FormatBadge } from './FormatBadge'
+import { RatingHearts } from './RatingHearts'
 import { cn } from '@/lib/utils'
 import type { MediaItem } from '@/lib/types'
 
@@ -38,6 +39,11 @@ export function MediaCard({ item, onToggleStatus }: MediaCardProps) {
           {item.mediaType === 'book' && item.bookFormat && (
             <div className="mt-1">
               <FormatBadge format={item.bookFormat} />
+            </div>
+          )}
+          {item.status === 'done' && item.rating != null && (
+            <div className="mt-1">
+              <RatingHearts rating={item.rating} readOnly size="sm" />
             </div>
           )}
         </div>

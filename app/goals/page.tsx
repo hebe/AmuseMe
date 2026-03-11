@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { PageHeader } from '@/components/nav/PageHeader'
+import { ConsumptionChart } from '@/components/goals/ConsumptionChart'
 import { useGoals } from '@/hooks/useGoals'
 import { useMediaItemsContext } from '@/contexts/MediaItemsContext'
 import { getGoalProgress } from '@/lib/utils'
@@ -116,6 +117,14 @@ export default function GoalsPage() {
       {isCurrentYear && (
         <p className="mt-10 text-xs text-muted-foreground">Tap the target number to edit it.</p>
       )}
+
+      {/* ── History chart ── */}
+      <div className="mt-12">
+        <p className="mb-4 text-sm font-medium text-muted-foreground uppercase tracking-widest">
+          History
+        </p>
+        <ConsumptionChart items={items} />
+      </div>
 
       {/* ── Other years ── */}
       {otherYears.length > 0 && (

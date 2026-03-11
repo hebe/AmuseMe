@@ -13,7 +13,8 @@
       "Bash(grep -E '\"\"title\"\".*[øåæ]' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
       "Bash(grep -E '\"\"id\"\": \"\"mi-book-.*-[aeiou]-' /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
       "Bash(ls -1 /Users/Hilde.Skjolberg@vg.no/Downloads/media-tracker-docs/*.json)",
-      "Bash(npx tsx --env-file=.env.local scripts/import.ts)"
+      "Bash(npx tsx --env-file=.env.local scripts/import.ts)",
+      "Bash(/Users/Hilde.Skjolberg@vg.no/.nvm/versions/node/v23.11.1/bin/node /Users/Hilde.Skjolberg@vg.no/.nvm/versions/node/v23.11.1/lib/node_modules/npm/bin/npm-cli.js install recharts)"
     ]
   }
 }

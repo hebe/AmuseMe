@@ -2,20 +2,28 @@
  * Real data import script.
  *
  * Wipes all existing media data (tv_series, media_items, consumption_goals)
- * and replaces it with real historical data from 5 JSON import files.
+ * and replaces it with real historical data from JSON import files.
  * The users table is left untouched.
  *
  * Import files (from ~/Downloads/media-tracker-docs/):
- *   goodreads_import_with_urls.json          — 255 books
- *   media_import_2020_non_books_v2.json      — 2020 movies + TV
- *   media_import_2021_non_books_with_imdb_everything.json
- *   media_import_2022_non_books_with_imdb.json
- *   media_import_2023_non_books_with_imdb_style_matched.json
+ *   goodreads_import_with_urls.json                        — books
+ *   media_import_2018_non_books_with_imdb.json             — 2018 movies + TV
+ *   media_import_2019_non_books_with_imdb.json             — 2019 movies + TV + podcasts
+ *   media_import_2020_non_books_v2.json                    — 2020 movies + TV
+ *   media_import_2021_non_books_with_imdb_everything.json  — 2021 movies + TV + podcasts
+ *   media_import_2022_non_books_with_imdb.json             — 2022 movies + TV
+ *   media_import_2023_non_books_with_imdb_style_matched_v2.json
+ *   media_import_2024_non_books_with_imdb_v2.json
+ *   media_import_2025_non_books_with_imdb.json
  *
  * Usage:
  *   npx tsx --env-file=.env.local scripts/import.ts
  *
  * Safe to re-run (wipe → re-insert). Does NOT touch the users table.
+ *
+ * ⚠️  IMPORTANT: this script wipes consumption_goals too.
+ *     Always re-seed goals after running:
+ *       npx tsx --env-file=.env.local scripts/seed-goals.ts
  */
 
 import { config } from 'dotenv'
@@ -131,10 +139,15 @@ const IMPORT_DIR = path.join(
 
 const FILES = [
   'goodreads_import_with_urls.json',
+  'media_import_2018_non_books_with_imdb.json',
+  'media_import_2019_non_books_with_imdb.json',
   'media_import_2020_non_books_v2.json',
   'media_import_2021_non_books_with_imdb_everything.json',
   'media_import_2022_non_books_with_imdb.json',
-  'media_import_2023_non_books_with_imdb_style_matched.json',
+  'media_import_2023_non_books_with_imdb_style_matched_v2.json',
+  'media_import_2024_non_books_with_imdb_v2.json',
+  'media_import_2025_non_books_with_imdb.json',
+  'media_import_2026_non_books_with_imdb.json',
 ]
 
 async function run() {
