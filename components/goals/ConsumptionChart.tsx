@@ -14,7 +14,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts'
 import type { MediaItem } from '@/lib/types'
 
@@ -124,36 +123,35 @@ export function ConsumptionChart({ items, fromYear = 2018 }: ConsumptionChartPro
       {/* Horizontal scroll wrapper */}
       <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div style={{ width: chartWidth }}>
-          {/* ResponsiveContainer stretches to the explicit pixel width above */}
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart
-              data={data}
-              margin={{ top: 4, right: 4, left: -24, bottom: 0 }}
-              barCategoryGap="28%"
-              barGap={2}
-            >
-              <XAxis
-                dataKey="year"
-                tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                tickLine={false}
-                axisLine={false}
-                allowDecimals={false}
-                width={36}
-              />
-              <Tooltip
-                content={<ChartTooltip />}
-                cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
-              />
-              <Bar dataKey="Books"  fill={COLORS.Books}  radius={[3, 3, 0, 0]} />
-              <Bar dataKey="Movies" fill={COLORS.Movies} radius={[3, 3, 0, 0]} />
-              <Bar dataKey="TV"     fill={COLORS.TV}     radius={[3, 3, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <BarChart
+            width={chartWidth}
+            height={180}
+            data={data}
+            margin={{ top: 4, right: 4, left: -24, bottom: 0 }}
+            barCategoryGap="28%"
+            barGap={2}
+          >
+            <XAxis
+              dataKey="year"
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tickLine={false}
+              axisLine={false}
+              allowDecimals={false}
+              width={36}
+            />
+            <Tooltip
+              content={<ChartTooltip />}
+              cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
+            />
+            <Bar dataKey="Books"  fill={COLORS.Books}  radius={[3, 3, 0, 0]} />
+            <Bar dataKey="Movies" fill={COLORS.Movies} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="TV"     fill={COLORS.TV}     radius={[3, 3, 0, 0]} />
+          </BarChart>
         </div>
       </div>
     </div>

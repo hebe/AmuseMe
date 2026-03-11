@@ -1,0 +1,493 @@
+{
+  "tvSeries": [
+    {
+      "id": "series-mindhunter",
+      "title": "Mindhunter",
+      "seasonsAvailable": 2,
+      "imdbUrl": "https://www.imdb.com/title/tt5742374/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-stranger-things",
+      "title": "Stranger Things",
+      "seasonsAvailable": 4,
+      "imdbUrl": "https://www.imdb.com/title/tt4574334/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-show-me-a-hero",
+      "title": "Show Me a Hero",
+      "seasonsAvailable": 1,
+      "imdbUrl": "https://www.imdb.com/title/tt3072482/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-the-good-wife",
+      "title": "The Good Wife",
+      "seasonsAvailable": 7,
+      "imdbUrl": "https://www.imdb.com/title/tt1442462/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-one-day-at-a-time",
+      "title": "One Day at a Time",
+      "seasonsAvailable": 4,
+      "imdbUrl": "https://www.imdb.com/title/tt5698812/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-please-like-me",
+      "title": "Please Like Me",
+      "seasonsAvailable": 4,
+      "imdbUrl": "https://www.imdb.com/title/tt2651280/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-the-handmaids-tale",
+      "title": "The Handmaid's Tale",
+      "seasonsAvailable": 5,
+      "imdbUrl": "https://www.imdb.com/title/tt5834204/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-olive-kitteridge",
+      "title": "Olive Kitteridge",
+      "seasonsAvailable": 1,
+      "imdbUrl": "https://www.imdb.com/title/tt3412800/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-coach-snoop",
+      "title": "Coach Snoop",
+      "seasonsAvailable": 1,
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-collateral",
+      "title": "Collateral",
+      "seasonsAvailable": 1,
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-manhunt-unabomber",
+      "title": "Manhunt: Unabomber",
+      "seasonsAvailable": 1,
+      "imdbUrl": "https://www.imdb.com/title/tt5618354/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-the-defiant-ones",
+      "title": "The Defiant Ones",
+      "seasonsAvailable": 1,
+      "imdbUrl": "https://www.imdb.com/title/tt6333824/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-atlanta",
+      "title": "Atlanta",
+      "seasonsAvailable": 4,
+      "imdbUrl": "https://www.imdb.com/title/tt4288182/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-heimebane",
+      "title": "Heimebane",
+      "seasonsAvailable": 2,
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-fargo",
+      "title": "Fargo",
+      "seasonsAvailable": 5,
+      "imdbUrl": "https://www.imdb.com/title/tt2802850/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-homeland",
+      "title": "Homeland",
+      "seasonsAvailable": 8,
+      "imdbUrl": "https://www.imdb.com/title/tt1796960/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-good-girls",
+      "title": "Good Girls",
+      "seasonsAvailable": 4,
+      "imdbUrl": "https://www.imdb.com/title/tt6974582/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-glow",
+      "title": "GLOW",
+      "seasonsAvailable": 3,
+      "imdbUrl": "https://www.imdb.com/title/tt6021612/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-orange-is-the-new-black",
+      "title": "Orange Is the New Black",
+      "seasonsAvailable": 7,
+      "imdbUrl": "https://www.imdb.com/title/tt2372162/",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "series-jeg-mot-meg",
+      "title": "Jeg mot meg",
+      "seasonsAvailable": 2,
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    }
+  ],
+  "mediaItems": [
+    {
+      "id": "mi-movie-lady-bird",
+      "title": "Lady Bird",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z",
+      "imdbUrl": "https://www.imdb.com/title/tt5765882/"
+    },
+    {
+      "id": "mi-movie-three-billboards-outside-ebbing-missouri",
+      "title": "Three Billboards Outside Ebbing, Missouri",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z",
+      "imdbUrl": "https://www.imdb.com/title/tt5027774/"
+    },
+    {
+      "id": "mi-movie-the-post",
+      "title": "The Post",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z",
+      "imdbUrl": "https://www.imdb.com/title/tt6294822/"
+    },
+    {
+      "id": "mi-movie-deadpool",
+      "title": "Deadpool",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z",
+      "imdbUrl": "https://www.imdb.com/title/tt1431045/"
+    },
+    {
+      "id": "mi-movie-i-tonya",
+      "title": "I, Tonya",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z",
+      "imdbUrl": "https://www.imdb.com/title/tt5580036/"
+    },
+    {
+      "id": "mi-movie-wildcats",
+      "title": "Wildcats",
+      "mediaType": "movie",
+      "status": "done",
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-mindhunter-s1",
+      "title": "Mindhunter — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-mindhunter",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-stranger-things-s1",
+      "title": "Stranger Things — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-stranger-things",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-show-me-a-hero-s1",
+      "title": "Show Me a Hero — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-show-me-a-hero",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-the-good-wife-s1",
+      "title": "The Good Wife — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-the-good-wife",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-one-day-at-a-time-s1",
+      "title": "One Day at a Time — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-one-day-at-a-time",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-please-like-me-s1",
+      "title": "Please Like Me — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-please-like-me",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-the-handmaids-tale-s1",
+      "title": "The Handmaid's Tale — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-the-handmaids-tale",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-olive-kitteridge-s1",
+      "title": "Olive Kitteridge — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-olive-kitteridge",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-coach-snoop-s1",
+      "title": "Coach Snoop — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-coach-snoop",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-collateral-s1",
+      "title": "Collateral — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-collateral",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-manhunt-unabomber-s1",
+      "title": "Manhunt: Unabomber — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-manhunt-unabomber",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-the-defiant-ones-s1",
+      "title": "The Defiant Ones — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-the-defiant-ones",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-atlanta-s1",
+      "title": "Atlanta — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-atlanta",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-heimebane-s1",
+      "title": "Heimebane — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-heimebane",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-fargo-s3",
+      "title": "Fargo — Season 3",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-fargo",
+      "seasonNumber": 3,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-homeland-s6",
+      "title": "Homeland — Season 6",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-homeland",
+      "seasonNumber": 6,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-good-girls-s1",
+      "title": "Good Girls — Season 1",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-good-girls",
+      "seasonNumber": 1,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-glow-s2",
+      "title": "GLOW — Season 2",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-glow",
+      "seasonNumber": 2,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-orange-is-the-new-black-s6",
+      "title": "Orange Is the New Black — Season 6",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-orange-is-the-new-black",
+      "seasonNumber": 6,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    },
+    {
+      "id": "mi-tv-jeg-mot-meg-s2",
+      "title": "Jeg mot meg — Season 2",
+      "mediaType": "tv_season",
+      "status": "done",
+      "seriesId": "series-jeg-mot-meg",
+      "seasonNumber": 2,
+      "consumedYear": 2018,
+      "dateAdded": "2018-01-01T00:00:00Z",
+      "dateConsumed": "2018-01-01T00:00:00Z",
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2018-01-01T00:00:00Z"
+    }
+  ]
+}
