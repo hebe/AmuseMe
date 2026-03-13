@@ -1,12 +1,14 @@
 'use client'
 
+import { Heart } from 'lucide-react'
+
 /**
  * RatingHearts — 6-point heart rating widget.
  *
  * Interactive: tap a heart to set that rating; tap the current rating to clear.
  * Read-only: pass readOnly to render a static display (used in MediaCard).
  *
- * Filled hearts are rose-coloured; empty hearts are muted.
+ * Filled hearts are solid foreground colour; empty hearts are the same shape at low opacity.
  */
 
 interface RatingHeartsProps {
@@ -30,7 +32,7 @@ export function RatingHearts({
     onChange(position === rating ? undefined : position)
   }
 
-  const textSize = size === 'sm' ? 'text-xs' : 'text-lg'
+  const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-5 w-5'
   const gap = size === 'sm' ? 'gap-0.5' : 'gap-1'
 
   return (
@@ -46,15 +48,18 @@ export function RatingHearts({
             disabled={readOnly}
             aria-label={`Rate ${position}`}
             className={[
-              textSize,
-              'leading-none transition-transform',
+              'transition-transform',
               readOnly
                 ? 'cursor-default'
                 : 'cursor-pointer hover:scale-125 active:scale-110',
-              filled ? 'text-foreground' : 'text-foreground/15',
+              filled ? 'text-foreground' : 'text-foreground/20',
             ].join(' ')}
           >
-            ❤
+            <Heart
+              className={iconSize}
+              strokeWidth={0}
+              fill="currentColor"
+            />
           </button>
         )
       })}

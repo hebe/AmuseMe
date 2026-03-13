@@ -50,7 +50,7 @@ export function QuickLogDrawer({ item, onClose, onLog }: QuickLogDrawerProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/30"
+        className="fixed inset-0 z-60 bg-black/30"
         onClick={onClose}
         aria-hidden
       />
@@ -60,7 +60,7 @@ export function QuickLogDrawer({ item, onClose, onLog }: QuickLogDrawerProps) {
         role="dialog"
         aria-modal
         aria-label={`Log ${item.title}`}
-        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-card px-4 pt-3 shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 z-70 rounded-t-2xl bg-card px-4 pt-3 shadow-2xl"
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >
         {/* Drag handle */}
