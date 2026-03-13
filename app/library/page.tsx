@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Search, X } from 'lucide-react'
@@ -178,6 +178,19 @@ function LibraryContent() {
     setLoggingItem(null)
   }
 
+  // Counts per filter type for the active status tab — drives the pill labels.
+  // Intentionally not affected by the active filter or search query.
+  const counts = useMemo(() => {
+    const byStatus = items.filter((i) => i.status === status)
+    return {
+      all:       byStatus.length,
+      book:      byStatus.filter((i) => i.mediaType === 'book').length,
+      movie:     byStatus.filter((i) => i.mediaType === 'movie').length,
+      tv_season: byStatus.filter((i) => i.mediaType === 'tv_season').length,
+      podcast:   byStatus.filter((i) => i.mediaType === 'podcast').length,
+    }
+  }, [items, status])
+
   const emptyMsg = emptyMessages[status][filter]
 
   return (
@@ -264,6 +277,12 @@ function LibraryContent() {
             )}
           >
             {label}
+            <span className={cn(
+              'ml-0.5 text-[10px]',
+              filter === value ? 'opacity-70' : 'opacity-60'
+            )}>
+              {counts[value]}
+            </span>
           </button>
         ))}
       </div>
