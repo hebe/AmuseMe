@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'm.media-amazon.com' },
       // Open Library book covers
       { protocol: 'https', hostname: 'covers.openlibrary.org' },
+      // Google Books thumbnails
+      { protocol: 'https', hostname: 'books.google.com' },
     ],
   },
 };
