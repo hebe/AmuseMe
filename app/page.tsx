@@ -44,7 +44,11 @@ export default function DashboardPage() {
     <main className="flex flex-col gap-8 px-4 pt-8">
       {/* ── Header ─────────────────────────────────────────────── */}
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">AmuseMe</h1>
+        <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.svg" alt="" aria-hidden="true" className="h-7 w-auto" />
+          AmuseMe
+        </h1>
       </header>
 
       {/* ── Goals widget ───────────────────────────────────────── */}

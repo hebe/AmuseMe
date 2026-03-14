@@ -31,6 +31,9 @@ const geist = Geist({
 export const metadata: Metadata = {
   title: 'AmuseMe',
   description: 'Track what you want to consume — and what you have.',
+  icons: {
+    apple: '/apple-touch-icon.svg',
+  },
 }
 
 export const viewport: Viewport = {
