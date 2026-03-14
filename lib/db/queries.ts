@@ -239,7 +239,7 @@ export async function insertTvSeries(series: TvSeries): Promise<void> {
     externalRefs:     series.externalRefs  ?? null,
     createdAt:        new Date(series.createdAt),
     updatedAt:        new Date(series.updatedAt),
-  })
+  }).onConflictDoNothing()
 }
 
 // ─── Consumption Goals ────────────────────────────────────────────────────────

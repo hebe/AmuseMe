@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { fuzzyMatch, cn } from '@/lib/utils'
-import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem } from '@/lib/types'
+import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem, TvSeries } from '@/lib/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Small reusable sub-components (scoped to this file)
@@ -116,6 +116,8 @@ export function AddItemForm({
       : new Date().toISOString().split('T')[0]
   )
   const [notes, setNotes] = useState(editItem?.notes ?? '')
+  const [seasonNumber, setSeasonNumber] = useState<number | ''>(editItem?.seasonNumber ?? '')
+  const [seriesList, setSeriesList] = useState<TvSeries[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   // ── Duplicate detection state ──────────────────────────────────────────────
@@ -159,6 +161,15 @@ export function AddItemForm({
     return () => clearTimeout(debounceRef.current)
   }, [title, author, status, items, duplicateDismissed])
 
+  // Fetch series list for TV autocomplete
+  useEffect(() => {
+    if (mediaType !== 'tv_season') return
+    fetch('/api/series')
+      .then((r) => r.json())
+      .then((data: TvSeries[]) => setSeriesList(data))
+      .catch(() => {/* non-critical */})
+  }, [mediaType])
+
   // Reset the dismissed flag whenever the user meaningfully edits the title
   const prevTitleRef = useRef(title)
   useEffect(() => {
@@ -177,6 +188,7 @@ export function AddItemForm({
   function validate(): boolean {
     const errs: Record<string, string> = {}
     if (!title.trim()) errs.title = 'Title is required'
+    if (mediaType === 'tv_season' && !seasonNumber) errs.seasonNumber = 'Season number is required'
     if (sourceUrl.trim() && !isValidUrl(sourceUrl.trim()))
       errs.sourceUrl = 'Must be a valid URL'
     if (status === 'done' && !dateConsumed)
@@ -203,7 +215,7 @@ export function AddItemForm({
 
   // ── Submit ─────────────────────────────────────────────────────────────────
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) return
 
@@ -229,6 +241,7 @@ export function AddItemForm({
           mediaType === 'book' && bookFormat === 'audiobook' ? audiobookSource : undefined,
         movieVenue:
           mediaType === 'movie' && status === 'done' ? movieVenue : undefined,
+        seasonNumber: mediaType === 'tv_season' && seasonNumber ? seasonNumber : undefined,
         notes: notes.trim() || undefined,
         dateConsumed: consumed,
         consumedYear: consumed ? new Date(consumed).getFullYear() : undefined,
@@ -239,6 +252,24 @@ export function AddItemForm({
     }
 
     // ── Add mode: create a new item ───────────────────────────────────────────
+
+    // For TV seasons, resolve (or create) the parent series first
+    let seriesId: string | undefined
+    if (mediaType === 'tv_season') {
+      try {
+        const res = await fetch('/api/series', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title.trim() }),
+        })
+        const series = await res.json() as { id: string }
+        seriesId = series.id
+      } catch {
+        toast.error('Could not save series — please try again')
+        return
+      }
+    }
+
     const newItem: MediaItem = {
       id: `item-${Date.now()}`,
       title: title.trim(),
@@ -255,6 +286,8 @@ export function AddItemForm({
       ...(mediaType === 'movie' && status === 'done' && { movieVenue }),
       ...(mediaType === 'book' && { bookFormat }),
       ...(mediaType === 'book' && bookFormat === 'audiobook' && { audiobookSource }),
+      ...(mediaType === 'tv_season' && seriesId && { seriesId }),
+      ...(mediaType === 'tv_season' && seasonNumber && { seasonNumber: Number(seasonNumber) }),
       ...(consumed && {
         dateConsumed: consumed,
         consumedYear: new Date(consumed).getFullYear(),
@@ -271,19 +304,27 @@ export function AddItemForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-2 pb-6">
 
-      {/* ── Title ── */}
-      <Field label="Title" error={errors.title}>
+      {/* ── Title / Series name ── */}
+      <Field label={mediaType === 'tv_season' ? 'Series name' : 'Title'} error={errors.title}>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="e.g. The Covenant of Water"
+          placeholder={mediaType === 'tv_season' ? 'e.g. Pørni' : 'e.g. The Covenant of Water'}
           autoFocus
+          list={mediaType === 'tv_season' ? 'series-list' : undefined}
           className={cn(
             inputClass,
             errors.title && 'border-red-400 focus:border-red-400 focus:ring-red-200'
           )}
         />
+        {mediaType === 'tv_season' && seriesList.length > 0 && (
+          <datalist id="series-list">
+            {seriesList.map((s) => (
+              <option key={s.id} value={s.title} />
+            ))}
+          </datalist>
+        )}
 
         {/* Duplicate alert — sits right below the title field */}
         {duplicate && !duplicateDismissed && (
@@ -330,6 +371,23 @@ export function AddItemForm({
           onChange={(v) => setMediaType(v as MediaType)}
         />
       </Field>
+
+      {/* ── Season number — TV only ── */}
+      {mediaType === 'tv_season' && (
+        <Field label="Season number" error={errors.seasonNumber}>
+          <input
+            type="number"
+            min={1}
+            value={seasonNumber}
+            onChange={(e) => setSeasonNumber(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
+            placeholder="e.g. 3"
+            className={cn(
+              inputClass,
+              errors.seasonNumber && 'border-red-400 focus:border-red-400 focus:ring-red-200'
+            )}
+          />
+        </Field>
+      )}
 
       {/* ── Status ── */}
       <Field label="Status">

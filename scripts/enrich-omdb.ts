@@ -43,6 +43,7 @@ interface OmdbResponse {
   Genre?: string         // "Drama, Comedy" or "N/A"
   Year?: string          // "2023" or "2020–2023"
   Plot?: string          // Short synopsis or "N/A"
+  Director?: string      // "Christopher Nolan" or "N/A"
 }
 
 interface ExternalRef {
@@ -120,9 +121,10 @@ async function enrichMovies() {
     const poster      = parsePoster(data.Poster)
     const genres      = parseGenres(data.Genre)
     const year        = parseYear(data.Year)
-    const description = data.Plot && data.Plot !== 'N/A' ? data.Plot : null
+    const description = data.Plot     && data.Plot     !== 'N/A' ? data.Plot     : null
+    const director    = data.Director && data.Director !== 'N/A' ? data.Director : null
 
-    if (!poster && !genres && !year && !description) {
+    if (!poster && !genres && !year && !description && !director) {
       skipped++
       continue
     }
@@ -134,11 +136,12 @@ async function enrichMovies() {
         ...(genres      ? { genres }                : {}),
         ...(year        ? { releaseYear: year }      : {}),
         ...(description ? { description }            : {}),
+        ...(director    ? { director }               : {}),
         updatedAt: new Date(),
       })
       .where(eq(mediaItems.id, row.id))
 
-    console.log(`  ✓  ${row.title}${poster ? ' [poster]' : ''}${description ? ' [plot]' : ''}`)
+    console.log(`  ✓  ${row.title}${poster ? ' [poster]' : ''}${director ? ` [${director}]` : ''}${description ? ' [plot]' : ''}`)
     ok++
   }
 
