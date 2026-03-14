@@ -72,6 +72,7 @@ function rowToMediaItem(row: MediaItemRow): MediaItem {
     coverImageUrl: row.coverImageUrl ?? undefined,
     releaseYear:   row.releaseYear   ?? undefined,
     genres:        row.genres        ?? undefined,
+    description:   row.description   ?? undefined,
 
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
@@ -102,11 +103,28 @@ function rowToGoal(row: GoalRow): ConsumptionGoal {
 // ─── Media Items ──────────────────────────────────────────────────────────────
 
 export async function getItemsByUser(userId: string): Promise<MediaItem[]> {
+  // LEFT JOIN tv_series to get the series externalRefs for tv_season items.
+  // IMDB links live on the tv_series record, not on individual season items,
+  // so we fall back to the series value when the item has no externalRefs.
+  // We alias the full item row and pull only externalRefs from the series to
+  // avoid column-name collisions (both tables share id, createdAt, updatedAt).
   const rows = await db
-    .select()
+    .select({
+      item: mediaItems,
+      seriesExternalRefs:  tvSeries.externalRefs,
+      seriesCoverImageUrl: tvSeries.coverImageUrl,
+    })
     .from(mediaItems)
+    .leftJoin(tvSeries, eq(mediaItems.seriesId, tvSeries.id))
     .where(eq(mediaItems.userId, userId))
-  return rows.map(rowToMediaItem)
+
+  return rows.map(({ item, seriesExternalRefs, seriesCoverImageUrl }) =>
+    rowToMediaItem({
+      ...item,
+      externalRefs:  item.externalRefs  ?? seriesExternalRefs  ?? null,
+      coverImageUrl: item.coverImageUrl ?? seriesCoverImageUrl ?? null,
+    }),
+  )
 }
 
 export async function insertMediaItem(
@@ -151,10 +169,15 @@ export async function insertMediaItem(
     coverImageUrl: item.coverImageUrl ?? null,
     releaseYear:   item.releaseYear   ?? null,
     genres:        item.genres        ?? null,
+    description:   item.description   ?? null,
 
     createdAt: new Date(item.createdAt),
     updatedAt: new Date(item.updatedAt),
   })
+}
+
+export async function deleteMediaItem(id: string): Promise<void> {
+  await db.delete(mediaItems).where(eq(mediaItems.id, id))
 }
 
 export async function patchMediaItem(
@@ -191,6 +214,7 @@ export async function patchMediaItem(
   if (patch.coverImageUrl !== undefined) set.coverImageUrl = patch.coverImageUrl ?? null
   if (patch.releaseYear   !== undefined) set.releaseYear   = patch.releaseYear   ?? null
   if (patch.genres        !== undefined) set.genres        = patch.genres        ?? null
+  if (patch.description   !== undefined) set.description   = patch.description   ?? null
 
   await db
     .update(mediaItems)

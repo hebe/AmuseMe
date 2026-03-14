@@ -22,6 +22,7 @@ type MediaItemsContextValue = {
   items: MediaItem[]
   addItem: (item: MediaItem) => void
   updateItem: (id: string, patch: Partial<MediaItem>) => void
+  deleteItem: (id: string) => void
   getItemById: (id: string) => MediaItem | undefined
 }
 
@@ -66,12 +67,21 @@ export function MediaItemsProvider({
     }).catch((err) => console.error('Failed to update item:', err))
   }
 
+  function deleteItem(id: string): void {
+    // 1. Optimistic update
+    setItems((prev) => prev.filter((item) => item.id !== id))
+
+    // 2. Persist in the background
+    fetch(`/api/items/${id}`, { method: 'DELETE' })
+      .catch((err) => console.error('Failed to delete item:', err))
+  }
+
   function getItemById(id: string): MediaItem | undefined {
     return items.find((item) => item.id === id)
   }
 
   return (
-    <MediaItemsContext.Provider value={{ items, addItem, updateItem, getItemById }}>
+    <MediaItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, getItemById }}>
       {children}
     </MediaItemsContext.Provider>
   )

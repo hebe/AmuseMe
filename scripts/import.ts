@@ -258,12 +258,20 @@ async function run() {
       }
     }
 
+    // For tv_season items the JSON title includes the season suffix
+    // ("Ted Lasso sesong 2") — strip it so the DB stores just the series name.
+    // The display layer appends "S{N}" at render time.
+    const cleanTitle =
+      item.mediaType === 'tv_season'
+        ? item.title.replace(/\s+(sesong|season)\s+\d+$/i, '').trim()
+        : item.title
+
     await db
       .insert(mediaItemsTable)
       .values({
         id:        item.id,
         userId:    USER_ID,
-        title:     item.title,
+        title:     cleanTitle,
         titleOriginal: item.titleOriginal ?? null,
         mediaType: item.mediaType,
         status:    item.status,

@@ -153,11 +153,12 @@ function LibraryContent() {
         (filter === 'all' || item.mediaType === filter) &&
         (!isSearching || itemMatchesQuery(item, normalisedQuery))
     )
-    // In search mode: sort alphabetically so results feel like a find-in-page.
-    // Normal mode preserves natural order.
+    // Search mode: alphabetical. Done: most recently consumed first. Want: most recently added first.
     .sort(isSearching
       ? (a, b) => a.title.localeCompare(b.title)
-      : () => 0
+      : status === 'done'
+        ? (a, b) => (b.dateConsumed ?? b.dateAdded).localeCompare(a.dateConsumed ?? a.dateAdded)
+        : (a, b) => b.dateAdded.localeCompare(a.dateAdded)
     )
 
   function handleToggleStatus(id: string) {

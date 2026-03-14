@@ -2,9 +2,8 @@
 
 import Link from 'next/link'
 import { MediaTypeIcon } from './MediaTypeIcon'
-import { FormatBadge } from './FormatBadge'
 import { RatingHearts } from './RatingHearts'
-import { cn } from '@/lib/utils'
+import { cn, formatItemTitle } from '@/lib/utils'
 import type { MediaItem } from '@/lib/types'
 
 interface MediaCardProps {
@@ -32,18 +31,13 @@ export function MediaCard({ item, onToggleStatus }: MediaCardProps) {
           <MediaTypeIcon type={item.mediaType} />
         </span>
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{item.title}</p>
+          <p className="truncate text-sm font-medium">{formatItemTitle(item)}</p>
           {subtitle && (
             <p className="truncate text-xs text-muted-foreground">{subtitle}</p>
           )}
-          {item.mediaType === 'book' && item.bookFormat && (
+          {item.status === 'done' && (
             <div className="mt-1">
-              <FormatBadge format={item.bookFormat} />
-            </div>
-          )}
-          {item.status === 'done' && item.rating != null && (
-            <div className="mt-1">
-              <RatingHearts rating={item.rating} readOnly size="sm" />
+              <RatingHearts rating={item.rating ?? undefined} readOnly size="xs" muted />
             </div>
           )}
         </div>
