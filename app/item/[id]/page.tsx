@@ -10,6 +10,7 @@ import { AddItemForm } from '@/components/forms/AddItemForm'
 import { RatingHearts } from '@/components/media/RatingHearts'
 import { cn, formatItemTitle } from '@/lib/utils'
 import type {
+  MediaItem,
   MediaType,
   BookFormat,
   AudiobookSource,
@@ -102,8 +103,10 @@ export default function ItemDetailPage() {
   const { id }    = useParams<{ id: string }>()
   const router    = useRouter()
   const { getItemById, updateItem, deleteItem } = useMediaItems()
-  const [isEditing, setIsEditing]     = useState(false)
+  const [isEditing, setIsEditing]         = useState(false)
   const [confirmDelete, setConfirmDelete] = useState<'entry' | 'summary' | null>(null)
+  const [isFetching, setIsFetching]       = useState(false)
+  const [fetchMsg, setFetchMsg]           = useState<string | null>(null)
 
   const item = getItemById(id)
 
@@ -134,6 +137,38 @@ export default function ItemDetailPage() {
         </header>
 
         <AddItemForm editItem={item} onSaveEdit={() => setIsEditing(false)} />
+
+        {/* ── Fetch info ── */}
+        {(item.mediaType === 'movie' || item.mediaType === 'tv_season' || item.mediaType === 'book') && (
+          <div className="mt-2 flex items-center gap-3 border-t border-border/30 pt-5">
+            <button
+              disabled={isFetching}
+              onClick={async () => {
+                setIsFetching(true)
+                setFetchMsg(null)
+                try {
+                  const res = await fetch(`/api/items/${id}/enrich`, { method: 'POST' })
+                  const json = await res.json() as { updated?: Record<string, unknown> }
+                  const fields = Object.keys(json.updated ?? {})
+                  if (fields.length === 0) {
+                    setFetchMsg('Nothing new found')
+                  } else {
+                    updateItem(id, json.updated as Partial<MediaItem>)
+                    setFetchMsg(`Updated: ${fields.join(', ')}`)
+                  }
+                } catch {
+                  setFetchMsg('Fetch failed')
+                } finally {
+                  setIsFetching(false)
+                }
+              }}
+              className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground disabled:opacity-40"
+            >
+              {isFetching ? 'Fetching…' : '↓ Fetch info from web'}
+            </button>
+            {fetchMsg && <span className="text-xs text-muted-foreground">{fetchMsg}</span>}
+          </div>
+        )}
 
         {/* ── Danger zone ── */}
         <div className="mt-2 flex flex-col gap-3 border-t border-border/30 pt-6">
