@@ -109,7 +109,7 @@ function LibraryContent() {
   const statusParam = searchParams.get('status')
   const filterParam = searchParams.get('filter')
   const [status, setStatusState] = useState<MediaStatus>(
-    statusParam === 'done' ? 'done' : 'want'
+    statusParam === 'want' ? 'want' : 'done'
   )
   const [filter, setFilterState] = useState<FilterType>(
     (['book', 'movie', 'tv_season', 'podcast'] as FilterType[]).includes(filterParam as FilterType)
@@ -241,20 +241,20 @@ function LibraryContent() {
         </div>
       )}
 
-      {/* ── Want / Done segmented control ──────────────────────── */}
-      <div className="mt-3 flex rounded-xl bg-muted p-1">
-        {(['want', 'done'] as MediaStatus[]).map((s) => (
+      {/* ── Past / Future toggle ────────────────────────────────── */}
+      <div className="mt-3 flex gap-4">
+        {(['done', 'want'] as MediaStatus[]).map((s) => (
           <button
             key={s}
             onClick={() => setStatus(s)}
             className={cn(
-              'flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors',
+              'text-base font-medium transition-colors',
               status === s
-                ? 'bg-card text-foreground shadow-sm'
+                ? 'text-[oklch(0.12_0.04_258)]'
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            {s === 'want' ? 'Want' : 'Done'}
+            {s === 'done' ? 'Past amusements' : 'Future amusements'}
           </button>
         ))}
       </div>
@@ -264,25 +264,20 @@ function LibraryContent() {
        * [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
        * hides the scrollbar on all browsers while keeping the scroll behaviour.
        */}
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mt-3 flex gap-4 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {mediaFilters.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
             className={cn(
-              'shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors',
+              'shrink-0 text-base font-medium transition-colors',
               filter === value
-                ? 'bg-foreground text-background'
-                : 'bg-muted text-muted-foreground hover:text-foreground'
+                ? 'text-[oklch(0.12_0.04_258)]'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {label}
-            <span className={cn(
-              'ml-0.5 text-[10px]',
-              filter === value ? 'opacity-70' : 'opacity-60'
-            )}>
-              {counts[value]}
-            </span>
+            <span className="ml-0.5 text-[10px] opacity-60">{counts[value]}</span>
           </button>
         ))}
       </div>
