@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Search, X } from 'lucide-react'
@@ -109,7 +109,7 @@ function LibraryContent() {
   const statusParam = searchParams.get('status')
   const filterParam = searchParams.get('filter')
   const [status, setStatusState] = useState<MediaStatus>(
-    statusParam === 'done' ? 'done' : 'want'
+    statusParam === 'want' ? 'want' : 'done'
   )
   const [filter, setFilterState] = useState<FilterType>(
     (['book', 'movie', 'tv_season', 'podcast'] as FilterType[]).includes(filterParam as FilterType)
@@ -178,6 +178,19 @@ function LibraryContent() {
     setLoggingItem(null)
   }
 
+  // Counts per filter type for the active status tab — drives the pill labels.
+  // Intentionally not affected by the active filter or search query.
+  const counts = useMemo(() => {
+    const byStatus = items.filter((i) => i.status === status)
+    return {
+      all:       byStatus.length,
+      book:      byStatus.filter((i) => i.mediaType === 'book').length,
+      movie:     byStatus.filter((i) => i.mediaType === 'movie').length,
+      tv_season: byStatus.filter((i) => i.mediaType === 'tv_season').length,
+      podcast:   byStatus.filter((i) => i.mediaType === 'podcast').length,
+    }
+  }, [items, status])
+
   const emptyMsg = emptyMessages[status][filter]
 
   return (
@@ -228,20 +241,20 @@ function LibraryContent() {
         </div>
       )}
 
-      {/* ── Want / Done segmented control ──────────────────────── */}
-      <div className="mt-3 flex rounded-xl bg-muted p-1">
-        {(['want', 'done'] as MediaStatus[]).map((s) => (
+      {/* ── Past / Future toggle ────────────────────────────────── */}
+      <div className="mt-3 flex gap-4">
+        {(['done', 'want'] as MediaStatus[]).map((s) => (
           <button
             key={s}
             onClick={() => setStatus(s)}
             className={cn(
-              'flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors',
+              'text-base font-medium transition-colors',
               status === s
-                ? 'bg-card text-foreground shadow-sm'
+                ? 'text-[oklch(0.12_0.04_258)]'
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            {s === 'want' ? 'Want' : 'Done'}
+            {s === 'done' ? 'Past amusements' : 'Future amusements'}
           </button>
         ))}
       </div>
@@ -251,19 +264,20 @@ function LibraryContent() {
        * [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
        * hides the scrollbar on all browsers while keeping the scroll behaviour.
        */}
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mt-3 flex gap-4 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {mediaFilters.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
             className={cn(
-              'shrink-0 rounded-full px-3 py-1 text-sm font-medium transition-colors',
+              'shrink-0 text-base font-medium transition-colors',
               filter === value
-                ? 'bg-foreground text-background'
-                : 'bg-muted text-muted-foreground hover:text-foreground'
+                ? 'text-[oklch(0.12_0.04_258)]'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {label}
+            <span className="ml-0.5 text-[10px] opacity-60">{counts[value]}</span>
           </button>
         ))}
       </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, BookOpen, Plus, Target } from 'lucide-react'
+import { Home, BookOpen, PlusCircle, Target } from 'lucide-react'
 
 export function BottomNav() {
   const pathname = usePathname()
@@ -82,29 +82,23 @@ function NavItem({
 // ─── Add button ───────────────────────────────────────────────────────────────
 
 function AddButton({ active }: { active: boolean }) {
+  const className = `flex flex-1 flex-col items-center justify-center gap-0.5 text-xs ${
+    active ? 'text-foreground' : 'text-muted-foreground transition-colors active:opacity-70'
+  }`
+
   if (active) {
     return (
-      <span
-        className="flex flex-1 flex-col items-center justify-center"
-        aria-current="page"
-        aria-label="Add item"
-      >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground opacity-60">
-          <Plus className="h-5 w-5" strokeWidth={2.5} />
-        </span>
+      <span className={className} aria-current="page" aria-label="Add item">
+        <PlusCircle className="h-6 w-6" strokeWidth={1.5} />
+        <span className="leading-none">Add</span>
       </span>
     )
   }
 
   return (
-    <Link
-      href="/add?status=want"
-      className="flex flex-1 flex-col items-center justify-center transition-opacity active:opacity-70"
-      aria-label="Add item"
-    >
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-        <Plus className="h-5 w-5" strokeWidth={2.5} />
-      </span>
+    <Link href="/add?status=want" className={className} aria-label="Add item">
+      <PlusCircle className="h-6 w-6" strokeWidth={1.5} />
+      <span className="leading-none">Add</span>
     </Link>
   )
 }
