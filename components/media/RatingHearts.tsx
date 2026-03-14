@@ -1,6 +1,6 @@
 'use client'
 
-import { Heart } from 'lucide-react'
+import { HeartIcon } from '@/components/icons/AppIcons'
 
 /**
  * RatingHearts — 6-point heart rating widget.
@@ -32,7 +32,7 @@ export function RatingHearts({
     onChange(position === rating ? undefined : position)
   }
 
-  const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-5 w-5'
+  const iconSize = size === 'sm' ? 'h-3.5 w-auto' : 'h-5 w-auto'
   const gap = size === 'sm' ? 'gap-0.5' : 'gap-1'
 
   return (
@@ -55,11 +55,7 @@ export function RatingHearts({
               filled ? 'text-foreground' : 'text-foreground/20',
             ].join(' ')}
           >
-            <Heart
-              className={iconSize}
-              strokeWidth={0}
-              fill="currentColor"
-            />
+            <HeartIcon className={iconSize} />
           </button>
         )
       })}

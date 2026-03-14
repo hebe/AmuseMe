@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, BookOpen, PlusCircle, Target } from 'lucide-react'
+import { HomeIcon, LibraryIcon, AddIcon, GoalIcon } from '@/components/icons/AppIcons'
 
 export function BottomNav() {
   const pathname = usePathname()
@@ -19,13 +19,13 @@ export function BottomNav() {
     >
       <div className="flex h-16 w-full items-stretch">
         {/* Home */}
-        <NavItem href="/" label="Home" icon={Home} active={pathname === '/'} />
+        <NavItem href="/" label="Home" icon={HomeIcon} active={pathname === '/'} />
 
         {/* Library */}
         <NavItem
           href="/library"
           label="Library"
-          icon={BookOpen}
+          icon={LibraryIcon}
           active={pathname.startsWith('/library')}
         />
 
@@ -36,7 +36,7 @@ export function BottomNav() {
         <NavItem
           href="/goals"
           label="Goals"
-          icon={Target}
+          icon={GoalIcon}
           active={pathname.startsWith('/goals')}
         />
       </div>
@@ -65,7 +65,7 @@ function NavItem({
   if (active) {
     return (
       <span className={className} aria-current="page">
-        <Icon className="h-5 w-5" strokeWidth={2} />
+        <Icon className="h-5 w-auto" />
         <span className="leading-none">{label}</span>
       </span>
     )
@@ -73,7 +73,7 @@ function NavItem({
 
   return (
     <Link href={href} className={className}>
-      <Icon className="h-5 w-5" strokeWidth={1.5} />
+      <Icon className="h-5 w-auto" />
       <span className="leading-none">{label}</span>
     </Link>
   )
@@ -89,7 +89,7 @@ function AddButton({ active }: { active: boolean }) {
   if (active) {
     return (
       <span className={className} aria-current="page" aria-label="Add item">
-        <PlusCircle className="h-6 w-6" strokeWidth={1.5} />
+        <AddIcon className="h-5 w-auto" />
         <span className="leading-none">Add</span>
       </span>
     )
@@ -97,7 +97,7 @@ function AddButton({ active }: { active: boolean }) {
 
   return (
     <Link href="/add?status=want" className={className} aria-label="Add item">
-      <PlusCircle className="h-6 w-6" strokeWidth={1.5} />
+      <AddIcon className="h-5 w-auto" />
       <span className="leading-none">Add</span>
     </Link>
   )
