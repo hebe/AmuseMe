@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { useMediaItems } from '@/hooks/useMediaItems'
 import { fuzzyMatch, cn } from '@/lib/utils'
-import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem, TvSeries } from '@/lib/types'
+import type { MediaType, MediaStatus, BookFormat, AudiobookSource, StreamingProvider, MediaItem, TvSeries, ExternalRef } from '@/lib/types'
+import type { LookupResult } from '@/app/api/lookup/route'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Small reusable sub-components (scoped to this file)
@@ -120,6 +121,15 @@ export function AddItemForm({
   const [seriesList, setSeriesList] = useState<TvSeries[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // ── Link lookup state ──────────────────────────────────────────────────────
+  const [lookupUrl, setLookupUrl] = useState('')
+  const [isLooking, setIsLooking] = useState(false)
+  const [lookupStatus, setLookupStatus] = useState<'idle' | 'ok' | 'error'>('idle')
+  // Extra fields from lookup not shown in form inputs (saved directly to DB on submit)
+  const [prefillData, setPrefillData] = useState<Partial<Pick<
+    MediaItem, 'director' | 'description' | 'genres' | 'coverImageUrl' | 'releaseYear' | 'externalRefs'
+  >>>({})
+
   // ── Duplicate detection state ──────────────────────────────────────────────
   const [duplicate, setDuplicate] = useState<DuplicateMatch | null>(null)
   // Once the user dismisses a suggestion for the current title, don't nag again
@@ -169,6 +179,50 @@ export function AddItemForm({
       .then((data: TvSeries[]) => setSeriesList(data))
       .catch(() => {/* non-critical */})
   }, [mediaType])
+
+  // Auto-lookup when a valid IMDB/Goodreads URL is typed or pasted
+  const lookupDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  useEffect(() => {
+    const isRecognised = /imdb\.com\/title\/tt\d+|goodreads\.com\/book\/show\/\d+/.test(lookupUrl)
+    if (!isRecognised) { setLookupStatus('idle'); return }
+
+    clearTimeout(lookupDebounceRef.current)
+    lookupDebounceRef.current = setTimeout(async () => {
+      setIsLooking(true)
+      setLookupStatus('idle')
+      try {
+        const res = await fetch('/api/lookup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: lookupUrl }),
+        })
+        if (!res.ok) throw new Error()
+        const data = await res.json() as LookupResult
+
+        // Fill visible form fields
+        if (data.title)     setTitle(data.title)
+        if (data.mediaType) setMediaType(data.mediaType)
+        if (data.author)    setAuthor(data.author)
+
+        // Stash enrichment data to attach to item on save
+        setPrefillData({
+          ...(data.director      && { director: data.director }),
+          ...(data.description   && { description: data.description }),
+          ...(data.genres        && { genres: data.genres }),
+          ...(data.coverImageUrl && { coverImageUrl: data.coverImageUrl }),
+          ...(data.releaseYear   && { releaseYear: data.releaseYear }),
+          ...(data.externalRefs  && { externalRefs: data.externalRefs as ExternalRef[] }),
+        })
+        setLookupStatus('ok')
+      } catch {
+        setLookupStatus('error')
+      } finally {
+        setIsLooking(false)
+      }
+    }, 400)
+
+    return () => clearTimeout(lookupDebounceRef.current)
+  }, [lookupUrl])
 
   // Reset the dismissed flag whenever the user meaningfully edits the title
   const prevTitleRef = useRef(title)
@@ -292,6 +346,8 @@ export function AddItemForm({
         dateConsumed: consumed,
         consumedYear: new Date(consumed).getFullYear(),
       }),
+      // Enrichment data from link lookup (director, description, cover, etc.)
+      ...prefillData,
     }
 
     addItem(newItem)
@@ -303,6 +359,36 @@ export function AddItemForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-2 pb-6">
+
+      {/* ── Link lookup — hidden in edit mode ── */}
+      {!editItem && (
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-foreground/80">
+            Paste an IMDB or Goodreads link
+            <span className="ml-1.5 font-normal text-muted-foreground">(optional)</span>
+          </label>
+          <div className="relative">
+            <input
+              type="url"
+              value={lookupUrl}
+              onChange={(e) => setLookupUrl(e.target.value)}
+              placeholder="https://www.imdb.com/title/tt… or goodreads.com/book/…"
+              className={cn(inputClass, 'pr-8')}
+            />
+            {isLooking && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground animate-pulse">
+                ↓
+              </span>
+            )}
+            {!isLooking && lookupStatus === 'ok' && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-foreground/60">✓</span>
+            )}
+            {!isLooking && lookupStatus === 'error' && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-red-400">✗</span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Title / Series name ── */}
       <Field label={mediaType === 'tv_season' ? 'Series name' : 'Title'} error={errors.title}>
