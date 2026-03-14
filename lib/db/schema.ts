@@ -98,6 +98,7 @@ export const mediaItems = pgTable('media_items', {
   coverImageUrl: text('cover_image_url'),
   releaseYear: integer('release_year'),
   genres: text('genres').array(),
+  description: text('description'),
 
   createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull(),

@@ -82,6 +82,7 @@ export interface MediaItem {
   coverImageUrl?: string
   releaseYear?: number
   genres?: string[]
+  description?: string
 
   createdAt: string
   updatedAt: string

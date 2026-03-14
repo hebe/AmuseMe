@@ -356,8 +356,55 @@ export function AddItemForm({
         </Field>
       )}
 
-      {/* ── Provider — TV and movies only ── */}
-      {(mediaType === 'tv_season' || mediaType === 'movie') && (
+      {/* ── Book format — books only ── */}
+      {mediaType === 'book' && (
+        <Field label="Format">
+          <SegmentedControl
+            options={[
+              { value: 'physical', label: 'Physical' },
+              { value: 'ebook', label: 'eBook' },
+              { value: 'audiobook', label: 'Audiobook' },
+            ]}
+            value={bookFormat}
+            onChange={(v) => setBookFormat(v as BookFormat)}
+          />
+        </Field>
+      )}
+
+      {/* ── Audiobook service — books + audiobook only ── */}
+      {mediaType === 'book' && bookFormat === 'audiobook' && (
+        <Field label="Audiobook service">
+          <select
+            value={audiobookSource}
+            onChange={(e) => setAudiobookSource(e.target.value as AudiobookSource)}
+            className={cn(inputClass, 'cursor-pointer')}
+          >
+            <option value="bookbeat">Bookbeat</option>
+            <option value="storytel">Storytel</option>
+            <option value="podme">PodMe</option>
+            <option value="fabel">Fabel</option>
+            <option value="other">Other</option>
+          </select>
+        </Field>
+      )}
+
+      {/* ── Venue — movies + done only ── */}
+      {mediaType === 'movie' && status === 'done' && (
+        <Field label="Watched at">
+          <SegmentedControl
+            options={[
+              { value: 'cinema', label: 'Cinema' },
+              { value: 'home', label: 'At home' },
+              { value: 'other', label: 'Other' },
+            ]}
+            value={movieVenue}
+            onChange={(v) => setMovieVenue(v as 'cinema' | 'home' | 'other')}
+          />
+        </Field>
+      )}
+
+      {/* ── Provider — TV always; movies only when watched at home ── */}
+      {(mediaType === 'tv_season' || (mediaType === 'movie' && status === 'done' && movieVenue === 'home')) && (
         <Field label="Provider">
           <select
             value={provider}
@@ -408,53 +455,6 @@ export function AddItemForm({
           )}
         </div>
       </div>
-
-      {/* ── Book format — books only ── */}
-      {mediaType === 'book' && (
-        <Field label="Format">
-          <SegmentedControl
-            options={[
-              { value: 'physical', label: 'Physical' },
-              { value: 'ebook', label: 'eBook' },
-              { value: 'audiobook', label: 'Audiobook' },
-            ]}
-            value={bookFormat}
-            onChange={(v) => setBookFormat(v as BookFormat)}
-          />
-        </Field>
-      )}
-
-      {/* ── Audiobook service — books + audiobook only ── */}
-      {mediaType === 'book' && bookFormat === 'audiobook' && (
-        <Field label="Audiobook service">
-          <select
-            value={audiobookSource}
-            onChange={(e) => setAudiobookSource(e.target.value as AudiobookSource)}
-            className={cn(inputClass, 'cursor-pointer')}
-          >
-            <option value="bookbeat">Bookbeat</option>
-            <option value="storytel">Storytel</option>
-            <option value="podme">PodMe</option>
-            <option value="fabel">Fabel</option>
-            <option value="other">Other</option>
-          </select>
-        </Field>
-      )}
-
-      {/* ── Venue — movies + done only ── */}
-      {mediaType === 'movie' && status === 'done' && (
-        <Field label="Watched at">
-          <SegmentedControl
-            options={[
-              { value: 'cinema', label: 'Cinema' },
-              { value: 'home', label: 'At home' },
-              { value: 'other', label: 'Other' },
-            ]}
-            value={movieVenue}
-            onChange={(v) => setMovieVenue(v as 'cinema' | 'home' | 'other')}
-          />
-        </Field>
-      )}
 
       {/* ── Date consumed — status = done only ── */}
       {status === 'done' && (

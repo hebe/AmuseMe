@@ -15,7 +15,8 @@ interface RatingHeartsProps {
   rating?: number                              // 1–6, or undefined = no rating
   onChange?: (rating: number | undefined) => void
   readOnly?: boolean
-  size?: 'sm' | 'md'
+  size?: 'xs' | 'sm' | 'md'
+  muted?: boolean
 }
 
 const TOTAL = 6
@@ -25,6 +26,7 @@ export function RatingHearts({
   onChange,
   readOnly = false,
   size = 'md',
+  muted = false,
 }: RatingHeartsProps) {
   function handleClick(position: number) {
     if (readOnly || !onChange) return
@@ -32,8 +34,8 @@ export function RatingHearts({
     onChange(position === rating ? undefined : position)
   }
 
-  const iconSize = size === 'sm' ? 'h-3.5 w-auto' : 'h-5 w-auto'
-  const gap = size === 'sm' ? 'gap-0.5' : 'gap-1'
+  const iconSize = size === 'xs' ? 'h-2.5 w-auto' : size === 'sm' ? 'h-3.5 w-auto' : 'h-5 w-auto'
+  const gap = size === 'xs' ? 'gap-0.5' : size === 'sm' ? 'gap-0.5' : 'gap-1'
 
   return (
     <div className={`flex items-center ${gap}`} aria-label={`Rating: ${rating ?? 'none'} out of ${TOTAL}`}>
@@ -52,7 +54,9 @@ export function RatingHearts({
               readOnly
                 ? 'cursor-default'
                 : 'cursor-pointer hover:scale-125 active:scale-110',
-              filled ? 'text-foreground' : 'text-foreground/20',
+              filled
+                ? (muted ? 'text-foreground/40' : 'text-foreground')
+                : (muted ? 'text-foreground/10' : 'text-foreground/20'),
             ].join(' ')}
           >
             <HeartIcon className={iconSize} />

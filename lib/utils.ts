@@ -12,6 +12,16 @@ export function deriveYear(dateString: string): number {
 }
 
 /**
+ * Display title for a media item.
+ * For tv_season items the DB stores just the series name ("Ted Lasso") and a
+ * separate seasonNumber — we combine them here into "Ted Lasso S2".
+ */
+export function formatItemTitle(item: Pick<MediaItem, 'title' | 'mediaType' | 'seasonNumber'>): string {
+  if (item.mediaType !== 'tv_season' || item.seasonNumber == null) return item.title
+  return `${item.title} S${item.seasonNumber}`
+}
+
+/**
  * Fuzzy title match — returns true if two titles are similar enough to flag
  * as potential duplicates. Strips common leading articles before comparing.
  * Stub: currently exact-matches after normalisation.
