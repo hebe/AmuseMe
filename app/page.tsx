@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { useMediaItemsContext } from '@/contexts/MediaItemsContext'
 import { useGoals } from '@/hooks/useGoals'
 import { getGoalProgress } from '@/lib/utils'
+import { MediaCard } from '@/components/media/MediaCard'
 import type { MediaType } from '@/lib/types'
 
 const CURRENT_YEAR = 2026
@@ -25,9 +26,8 @@ const mediaLabels: Record<MediaType, string> = {
   tv_season: 'TV seasons',
   podcast:   'Podcasts',
 }
-
 export default function DashboardPage() {
-  const { items } = useMediaItemsContext()
+  const { items, updateItem } = useMediaItemsContext()
   const { goals }  = useGoals()
 
   const currentGoals = goals.filter((g) => g.year === CURRENT_YEAR)
@@ -104,28 +104,18 @@ export default function DashboardPage() {
         <ul className="flex flex-col gap-2">
           {recent.map((item) => (
             <li key={item.id}>
-              <Link
-                href={`/item/${item.id}`}
-                className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3 transition-colors hover:border-foreground/20"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.author ?? item.director ?? item.podcastHost ?? ''}
-                    {(item.author ?? item.director ?? item.podcastHost) && ' · '}
-                    {mediaLabels[item.mediaType]}
-                  </p>
-                </div>
-                <span
-                  className={`ml-3 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                    item.status === 'done'
-                      ? 'bg-foreground text-background'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  {item.status === 'done' ? 'Done' : 'Want'}
-                </span>
-              </Link>
+              <MediaCard
+                item={item}
+                onToggleStatus={(id) => {
+                  const toggled = item.status === 'done' ? 'want' : 'done'
+                  const now = new Date().toISOString()
+                  updateItem(id, {
+                    status: toggled,
+                    dateConsumed: toggled === 'done' ? now : undefined,
+                    consumedYear: toggled === 'done' ? new Date(now).getFullYear() : undefined,
+                  })
+                }}
+              />
             </li>
           ))}
         </ul>
