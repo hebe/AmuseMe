@@ -104,6 +104,18 @@ export const mediaItems = pgTable('media_items', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull(),
 })
 
+// ─── User Profiles ────────────────────────────────────────────────────────────
+// Stores the AI-generated taste profile for each user.
+// summaryText is shown to the user; detailJson is the full structured profile
+// used as context when generating recommendations.
+
+export const userProfiles = pgTable('user_profiles', {
+  userId:      text('user_id').primaryKey().references(() => users.id),
+  summaryText: text('summary_text'),
+  detailJson:  jsonb('detail_json'),
+  generatedAt: timestamp('generated_at', { withTimezone: true }),
+})
+
 // ─── Consumption Goals ────────────────────────────────────────────────────────
 
 export const consumptionGoals = pgTable('consumption_goals', {

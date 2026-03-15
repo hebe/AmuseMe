@@ -18,6 +18,7 @@ import {
   consumptionGoals,
   mediaItems,
   tvSeries,
+  userProfiles,
   users,
 } from './schema'
 import type {
@@ -25,7 +26,9 @@ import type {
   MediaItem,
   MediaStatus,
   MediaType,
+  TasteProfileDetail,
   TvSeries,
+  UserTasteProfile,
 } from '@/lib/types'
 
 // ─── Type helpers ─────────────────────────────────────────────────────────────
@@ -265,6 +268,39 @@ export async function upsertGoal(
       target: consumptionGoals.id,
       set: { target: goal.target },
     })
+}
+
+// ─── User Profiles ────────────────────────────────────────────────────────────
+
+export async function getUserProfile(userId: string): Promise<UserTasteProfile | null> {
+  const [row] = await db
+    .select()
+    .from(userProfiles)
+    .where(eq(userProfiles.userId, userId))
+    .limit(1)
+  if (!row) return null
+  return {
+    userId:      row.userId,
+    summaryText: row.summaryText ?? '',
+    detailJson:  row.detailJson as TasteProfileDetail,
+    generatedAt: row.generatedAt?.toISOString() ?? new Date().toISOString(),
+  }
+}
+
+export async function upsertUserProfile(
+  userId:      string,
+  summaryText: string,
+  detailJson:  TasteProfileDetail,
+): Promise<UserTasteProfile> {
+  const generatedAt = new Date()
+  await db
+    .insert(userProfiles)
+    .values({ userId, summaryText, detailJson, generatedAt })
+    .onConflictDoUpdate({
+      target: userProfiles.userId,
+      set:    { summaryText, detailJson, generatedAt },
+    })
+  return { userId, summaryText, detailJson, generatedAt: generatedAt.toISOString() }
 }
 
 // ─── Users (used by auth + seed) ─────────────────────────────────────────────

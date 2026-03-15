@@ -87,3 +87,45 @@ export interface MediaItem {
   createdAt: string
   updatedAt: string
 }
+
+// ─── Taste profile ────────────────────────────────────────────────────────────
+
+// The detailed, internal version of the taste profile — passed to Gemini as
+// context when generating recommendations. Never shown directly to the user.
+export interface TasteProfileDetail {
+  overallPatterns: string
+  bookTastes?:     string
+  movieTastes?:    string
+  tvTastes?:       string
+  podcastTastes?:  string
+  ratingPatterns:  string
+  notableQuirks?:  string
+}
+
+// The stored profile row (maps to user_profiles table).
+export interface UserTasteProfile {
+  userId:      string
+  summaryText: string           // 3–5 sentences shown on the recommendations page
+  detailJson:  TasteProfileDetail
+  generatedAt: string           // ISO timestamp
+}
+
+// ─── Recommendations ──────────────────────────────────────────────────────────
+
+export interface RecommendationSuggestion {
+  title:          string
+  subtitle?:      string        // author, director, or podcast host
+  mediaType:      MediaType
+  whyThisForYou:  string        // 1–2 sentence personalised explanation
+  coverImageUrl?: string
+  description?:   string
+  // Want-list items: already saved, just surfaced as fitting the mood/profile
+  isFromWantList: boolean
+  wantListItemId?: string       // set when isFromWantList === true
+}
+
+export interface RecommendationSet {
+  suggestions: RecommendationSuggestion[]
+  mood?:        string
+  generatedAt:  string
+}
