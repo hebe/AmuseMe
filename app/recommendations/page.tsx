@@ -56,6 +56,18 @@ export default function RecommendationsPage() {
   const [savedIds,   setSavedIds]   = useState<Set<string>>(new Set())
   const resultsRef = useRef<HTMLDivElement>(null)
 
+  // Parse a fetch Response safely — reads as text first so an empty or HTML
+  // body produces a clean error message rather than a raw JS exception.
+  async function safeJson(res: Response, fallback: string) {
+    const text = await res.text()
+    let data: Record<string, unknown> = {}
+    try { data = JSON.parse(text) } catch {
+      throw new Error(res.ok ? fallback : `Server error (${res.status}) — please try again`)
+    }
+    if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : fallback)
+    return data
+  }
+
   // Load existing profile on mount
   useEffect(() => {
     fetch('/api/profile')
@@ -68,9 +80,8 @@ export default function RecommendationsPage() {
     setProfileLoading(true)
     try {
       const res  = await fetch('/api/profile', { method: 'POST' })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to generate profile')
-      setProfile(data.profile)
+      const data = await safeJson(res, 'Failed to generate profile')
+      setProfile(data.profile as UserTasteProfile)
       toast.success('Taste profile generated!')
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Something went wrong')
@@ -89,9 +100,8 @@ export default function RecommendationsPage() {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ mood: mood.trim() || null }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to get recommendations')
-      setRecs(data.suggestions)
+      const data = await safeJson(res, 'Failed to get recommendations')
+      setRecs(data.suggestions as RecommendationSuggestion[])
       // Scroll to results
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     } catch (e) {
